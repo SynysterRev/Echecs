@@ -1,8 +1,9 @@
-from match import Match
+from models.match import Match
 from datetime import datetime
+from typing import List
 
 class Round:
-    def __init__(self, name, matches):
+    def __init__(self, name, matches: List[Match]):
         """Construct a round
 
         Parameters:
@@ -11,15 +12,15 @@ class Round:
         """
         self.name = name
         self.matches = matches
-        self.is_over = False
+        self.is_finished = False
         self.date_begin = ""
         self.date_end = ""
 
-    def start_match(self):
+    def start_round(self):
         now = datetime.now()
         self.date_begin = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    def end_match(self):
-        self.is_over = True
+    def end_round(self):
+        self.is_finished = True
         now = datetime.now()
         self.date_end = now.strftime("%d/%m/%Y %H:%M:%S")
