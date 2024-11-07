@@ -1,3 +1,4 @@
+from helper import Helper
 from views.identification_view import IdentificationView
 
 class IdentificationController:
@@ -5,7 +6,6 @@ class IdentificationController:
         self.view = IdentificationView()
 
     def run(self):
-        id = self.view.show_menu()
-        # load correct json
-        # go to main menu
-        return
+        club_id = self.view.show_menu()
+        Helper.club_id = club_id
+        return "main_menu"

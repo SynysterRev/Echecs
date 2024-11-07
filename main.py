@@ -1,14 +1,14 @@
-from controllers.tournament_controller import TournamentController
 from controllers.base import Controller
-from views.menu_view import MenuView
-from views.base import View
-from views.identification_view import IdentificationView
 from controllers.identification_controller import IdentificationController
+from controllers.menu_controller import MenuController
+import json
 
 def main():
-    menu_view = IdentificationView()
-    view = View(menu_view, None)
-    controller = IdentificationController()
+    MenuController.run()
+    id_controller = IdentificationController()
+    menu_controller = MenuController()
+    all_controllers = {"main_menu": menu_controller, "identification_menu": id_controller}
+    controller = Controller(id_controller, all_controllers)
     controller.run()
 
 if __name__ == "__main__":

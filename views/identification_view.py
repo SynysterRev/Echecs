@@ -1,10 +1,10 @@
-from views.abstract_view import AbstractView
+from views.basic_view import BasicView
 import re
 
 from views.base import IncorrectValueException
 
 
-class IdentificationView(AbstractView):
+class IdentificationView(BasicView):
     def __init__(self):
         super().__init__()
         self.name = "Menu identification"
