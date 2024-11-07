@@ -5,7 +5,7 @@ class Player:
         self.birth_date = birth_date
 
     @staticmethod
-    def deserialize(json_text: str) -> "Player":
+    def deserialize(json_text) -> "Player":
         name = json_text["name"]
         first_name = json_text["first_name"]
         birth_date = json_text["birth_date"]
