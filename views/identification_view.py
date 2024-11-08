@@ -1,7 +1,7 @@
 from views.basic_view import BasicView
 import re
 
-from views.base import IncorrectValueException
+from views.base import FormatIDException
 
 
 class IdentificationView(BasicView):
@@ -12,15 +12,7 @@ class IdentificationView(BasicView):
     def show_menu(self):
         """First menu to get the club using the application"""
         super(IdentificationView, self).show_menu()
-        while True:
-            try:
-                id = str(input("Veuillez entrer l'identifiant du club : "))
-                if not re.match(r"^[A-Z]{2}[1-9]{5}$", id):
-                    raise IncorrectValueException("L'identifiant doit comporter 2 lettres suivies de 5 chiffres ("
-                                                  "AB12345)")
-            except ValueError:
-                print("Veuillez entrer une chaîne de caractères")
-            except IncorrectValueException as incorrect_value:
-                print(incorrect_value)
-            else:
-                return id
+        club_id = str(input("Veuillez entrer l'identifiant du club : "))
+        if not re.match(r"^[A-Z]{2}[1-9]{5}$", club_id):
+            raise FormatIDException()
+        return club_id

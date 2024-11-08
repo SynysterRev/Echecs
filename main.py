@@ -3,11 +3,15 @@ from controllers.identification_controller import IdentificationController
 from controllers.menu_controller import MenuController
 import json
 
+from controllers.player_controller import PlayerController
+
+
 def main():
-    MenuController.run()
+    # MenuController.run()
     id_controller = IdentificationController()
     menu_controller = MenuController()
-    all_controllers = {"main_menu": menu_controller, "identification_menu": id_controller}
+    player_controller = PlayerController()
+    all_controllers = {"main_menu": menu_controller, "identification_menu": id_controller, "add_players": player_controller}
     controller = Controller(id_controller, all_controllers)
     controller.run()
 
