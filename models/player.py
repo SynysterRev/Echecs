@@ -11,6 +11,10 @@ class Player:
         birth_date = json_text["birth_date"]
         return Player(name, first_name, birth_date)
 
+    @staticmethod
+    def serialize(player: "Player"):
+        return {"name": player.name, "first_name": player.first_name, "birth_date": player.birth_date}
+
     def __str__(self):
         return self.first_name + " " + self.name + " né le " + self.birth_date
 

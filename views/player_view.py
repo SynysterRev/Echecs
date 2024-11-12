@@ -1,3 +1,6 @@
+import datetime
+import re
+
 from views.basic_view import BasicView
 
 
@@ -16,6 +19,13 @@ class PlayerView(BasicView):
         print("2. Revenir au menu principal")
         return self.ask_for_user_choice(2)
 
-    def ask_new_player(self):
-        print()
-        # (bob, marlik, 10/18/2015) ()
+    def ask_player_name(self):
+        return str(input("Nom : "))
+
+    def ask_player_first_name(self):
+        return str(input("Prenom : "))
+
+    def ask_player_birth_date(self):
+        date = str(input("Date de naissance (ex : 01/01/1900): "))
+        return datetime.datetime.strptime(date, "%d/%m/%Y")
+

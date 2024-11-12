@@ -11,7 +11,7 @@ class IdentificationController:
             try:
                 club_id = self.view.show_menu()
             except ValueError:
-                self.view.show_type_value_error()
+                self.view.show_type_int_error()
             except FormatIDException as id_exception:
                 self.view.show_custom_error(id_exception)
             else:

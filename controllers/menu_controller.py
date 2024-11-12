@@ -18,7 +18,7 @@ class MenuController:
             try:
                 choice = self.view.show_menu()
             except ValueError as ve:
-                self.view.show_type_value_error()
+                self.view.show_type_int_error()
             except OutOfRangeValueException as exception:
                 self.view.show_custom_error(exception)
             else:

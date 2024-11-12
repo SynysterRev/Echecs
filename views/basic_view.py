@@ -18,7 +18,7 @@ class BasicView:
             # Since tuples start at 0
             return choice - 1
 
-    def show_type_value_error(self):
+    def show_type_int_error(self):
         print(Fore.YELLOW)
         print("Veuillez entrer un nombre entier")
         print(Style.RESET_ALL)

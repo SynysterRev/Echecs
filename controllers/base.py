@@ -30,7 +30,7 @@ class Controller:
                 if next_menu_id == "quit":
                     return None
                 else:
-                    raise MenuException(f"Menu {next_menu_id} not found. Shutting down program")
+                    raise MenuException(f"Menu {next_menu_id} n'existe pas. Fermeture du programme")
         except MenuException as menu_exception:
             print(menu_exception)
             sys.exit(1)

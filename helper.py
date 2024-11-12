@@ -8,3 +8,7 @@ class Helper:
     @classmethod
     def get_player_path(cls):
         return "data/" + cls.club_id + "/players/players.json"
+
+    @staticmethod
+    def get_main_menu():
+        return "main_menu"
