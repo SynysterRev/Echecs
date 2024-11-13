@@ -15,7 +15,7 @@ class BasicView:
 
     def show_heading_menu(self):
         """Allow some basic formatting for derived views"""
-        print(self.name)
+        print("\n" + self.name)
         print("--------------------------")
 
     def ask_for_user_choice(self, number_max_to_enter):

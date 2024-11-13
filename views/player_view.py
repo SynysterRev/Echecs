@@ -6,14 +6,14 @@ from views.basic_view import BasicView
 class PlayerView(BasicView):
     def __init__(self):
         super().__init__()
-        self.name = "Joueurs"
+        self.name = "Joueurs enregistrés"
         self.players_list = []
 
     def show_menu(self):
         self.show_heading_menu()
-        print("Joueurs enregistrés : ")
         for player in self.players_list:
             print(player)
+        print()
         self.display_accessible_menus()
         return self.ask_for_user_choice(2)
 
