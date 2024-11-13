@@ -1,6 +1,6 @@
 from colorama import Fore, Style
+from custom_exception import OutOfRangeValueException
 
-from views.base import OutOfRangeValueException
 
 class BasicView:
     def __init__(self):
@@ -12,11 +12,11 @@ class BasicView:
         print("--------------------------")
 
     def ask_for_user_choice(self, number_max_to_enter):
-            choice = int(input("Tapez le numéro correspondant à l'action souhaitée : "))
-            if not (1 <= choice <= number_max_to_enter):
-                 raise OutOfRangeValueException(number_max_to_enter)
-            # Since tuples start at 0
-            return choice - 1
+        choice = int(input("Tapez le numéro correspondant à l'action souhaitée : "))
+        if not (1 <= choice <= number_max_to_enter):
+            raise OutOfRangeValueException(number_max_to_enter)
+        # Since tuples start at 0
+        return choice - 1
 
     def show_type_int_error(self):
         print(Fore.YELLOW)

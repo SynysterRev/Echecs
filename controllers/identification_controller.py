@@ -1,10 +1,11 @@
-from helper import Helper
-from views.base import FormatIDException
-from views.identification_view import IdentificationView
+from controllers.base_controller import BaseController
+from helpers.helper import Helper
+from views.identification_view import FormatIDException
 
-class IdentificationController:
-    def __init__(self):
-        self.view = IdentificationView()
+
+class IdentificationController(BaseController):
+    def __init__(self, view):
+        super().__init__(view)
 
     def run(self):
         while True:
@@ -16,4 +17,4 @@ class IdentificationController:
                 self.view.show_custom_error(id_exception)
             else:
                 Helper.club_id = club_id
-                return "main_menu"
+                return Helper.get_main_menu()

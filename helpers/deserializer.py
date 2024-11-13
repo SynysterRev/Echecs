@@ -2,7 +2,7 @@ import json
 import os
 from typing import List
 
-from helper import Helper
+from helpers.helper import Helper
 from models.player import Player
 
 

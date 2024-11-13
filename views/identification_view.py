@@ -1,7 +1,6 @@
 from views.basic_view import BasicView
 import re
-
-from views.base import FormatIDException
+from custom_exception import FormatIDException
 
 
 class IdentificationView(BasicView):

@@ -7,14 +7,6 @@ from typing import List
 import random
 
 
-class NoTournamentException(Exception):
-    '''No tournament selected'''
-
-    def __init__(self, message=""):
-        message = message or "No tournament selected"
-        super().__init__(message)
-
-
 class TournamentController:
     def __init__(self):
         self.players_encounters = {}
@@ -60,7 +52,6 @@ class TournamentController:
         current_round = self.current_tournament.rounds[self.current_tournament.current_round]
         current_round.start_round()
 
-
     def sort_player_by_points(self, player):
         return player[1]
 
@@ -100,3 +91,6 @@ class TournamentController:
 
     def get_matches_current_round(self):
         print("")
+
+    def run(self):
+        print()

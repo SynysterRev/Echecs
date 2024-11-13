@@ -1,7 +1,7 @@
 import json
 import os
 
-from helper import Helper
+from helpers.helper import Helper
 from models.player import Player
 
 
