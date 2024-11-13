@@ -9,7 +9,7 @@ class ViewManager:
         self.active_view = IdentificationView()
         self.views = {Helper.get_identification_menu(): IdentificationView,
                       Helper.get_main_menu(): MenuView,
-                      Helper.get_add_players_menu(): PlayerView}
+                      Helper.get_players_menu(): PlayerView}
                       # Helper.launch_tournament_menu(): TournamentView(),
                       # Helper.get_generate_reports_menu(): ReportView(),
                       # Helper.get_new_tournament_menu(): TournamentView()}

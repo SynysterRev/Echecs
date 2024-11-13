@@ -14,10 +14,8 @@ class MainController:
     def __init__(self, view_manager):
         starting_view = view_manager.views[Helper.get_identification_menu()]()
         id_controller = IdentificationController(starting_view)
-        # menu_controller = MenuController(view_manager.views[Helper.get_main_menu()])
-        # player_controller = PlayerController(view_manager.views[Helper.get_add_players_menu()])
         all_controllers = {Helper.get_main_menu(): MenuController, Helper.get_identification_menu(): IdentificationController,
-                           Helper.get_add_players_menu(): PlayerController}
+                           Helper.get_players_menu(): PlayerController}
         self.active_controller = id_controller
         self.controllers = all_controllers
         self.view_manager = view_manager

@@ -1,12 +1,19 @@
 from colorama import Fore, Style
 from custom_exception import OutOfRangeValueException
+from helpers.helper import Helper
 
 
 class BasicView:
     def __init__(self):
         self.name = ""
+        self.accessible_menus = ()
 
     def show_menu(self):
+        self.show_heading_menu()
+        self.display_accessible_menus()
+        return self.ask_for_user_choice(len(self.accessible_menus))
+
+    def show_heading_menu(self):
         """Allow some basic formatting for derived views"""
         print(self.name)
         print("--------------------------")
@@ -27,3 +34,8 @@ class BasicView:
         print(Fore.YELLOW)
         print(error)
         print(Style.RESET_ALL)
+
+    def display_accessible_menus(self):
+        for i in range(len(self.accessible_menus)):
+            # ex : "1. Créer un tournoi"
+            print(f"{i + 1}. {Helper.text_menu[self.accessible_menus[i]]}")

@@ -11,12 +11,11 @@ class PlayerView(BasicView):
         self.players_list = []
 
     def show_menu(self):
-        super().show_menu()
+        self.show_heading_menu()
         print("Joueurs enregistrés : ")
         for player in self.players_list:
             print(player)
-        print("1. Ajouter un nouveau joueur")
-        print("2. Revenir au menu principal")
+        self.display_accessible_menus()
         return self.ask_for_user_choice(2)
 
     def ask_player_name(self):

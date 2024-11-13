@@ -1,3 +1,4 @@
+from helpers.helper import Helper
 from models.tournament import Tournament
 from models.round import Round
 from models.player import Player
@@ -11,6 +12,10 @@ class TournamentController:
     def __init__(self):
         self.players_encounters = {}
         self.current_tournament = None
+        self.accessible_menus = (Helper.get_new_tournament_menu(),
+                                 Helper.get_modify_tournament_menu(),
+                                 Helper.get_launch_tournament_menu(),
+                                 Helper.get_main_menu())
 
     def create_tournament(self, name, place, date, players, description, number_round):
         for player in players:

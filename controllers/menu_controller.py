@@ -11,9 +11,8 @@ class MenuController(BaseController):
          accessible_menus: id of all the menus that we can access from here
         """
         super().__init__(view)
-        self.accessible_menus = (Helper.get_new_tournament_menu(),
-                                 Helper.get_launch_tournament_menu(),
-                                 Helper.get_add_players_menu(),
+        self.accessible_menus = (Helper.get_tournament_menu(),
+                                 Helper.get_players_menu(),
                                  Helper.get_generate_reports_menu(),
                                  Helper.get_identification_menu(),
                                  Helper.get_quit())

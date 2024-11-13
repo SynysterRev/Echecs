@@ -10,7 +10,7 @@ class IdentificationView(BasicView):
 
     def show_menu(self):
         """First menu to get the club using the application"""
-        super().show_menu()
+        self.show_heading_menu()
         club_id = str(input("Veuillez entrer l'identifiant du club : "))
         if not re.match(r"^[A-Z]{2}[1-9]{5}$", club_id):
             raise FormatIDException()
