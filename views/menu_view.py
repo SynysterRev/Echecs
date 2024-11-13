@@ -10,7 +10,7 @@ class MenuView(BasicView):
 
     def show_menu(self):
         """Main menu of the application"""
-        super(MenuView, self).show_menu()
+        super().show_menu()
         for i in range(len(self.accessible_menus)):
             # ex : "1. Créer un tournoi"
             print(f"{i + 1}. {Helper.text_menu[self.accessible_menus[i]]}")

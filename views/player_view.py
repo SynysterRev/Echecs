@@ -11,7 +11,7 @@ class PlayerView(BasicView):
         self.players_list = []
 
     def show_menu(self):
-        super(PlayerView, self).show_menu()
+        super().show_menu()
         print("Joueurs enregistrés : ")
         for player in self.players_list:
             print(player)
