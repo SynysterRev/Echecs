@@ -1,3 +1,4 @@
+from controllers.base_controller import BaseController
 from helpers.helper import Helper
 from models.tournament import Tournament
 from models.round import Round
@@ -8,8 +9,9 @@ from typing import List
 import random
 
 
-class TournamentController:
-    def __init__(self):
+class TournamentController(BaseController):
+    def __init__(self, view):
+        super().__init__(view)
         self.players_encounters = {}
         self.current_tournament = None
         self.accessible_menus = (Helper.get_new_tournament_menu(),
@@ -98,4 +100,6 @@ class TournamentController:
         print("")
 
     def run(self):
-        print()
+        self.view.accessible_menus = self.accessible_menus
+        choice = self.get_user_choice()
+        return self.accessible_menus[choice]

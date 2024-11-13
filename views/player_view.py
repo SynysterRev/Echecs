@@ -1,5 +1,4 @@
 import datetime
-import re
 
 from views.basic_view import BasicView
 

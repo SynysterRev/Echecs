@@ -1,4 +1,3 @@
-from helpers.helper import Helper
 from views.basic_view import BasicView
 
 class MenuView(BasicView):

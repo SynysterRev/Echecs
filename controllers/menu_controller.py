@@ -1,7 +1,5 @@
 from controllers.base_controller import BaseController
 from helpers.helper import Helper
-from views.menu_view import MenuView
-from custom_exception import OutOfRangeValueException
 
 
 class MenuController(BaseController):
