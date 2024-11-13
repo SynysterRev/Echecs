@@ -20,15 +20,9 @@ class PlayerController(BaseController):
             if choice == 0:
                 name = self.view.ask_player_name()
                 first_name = self.view.ask_player_first_name()
-                while True:
-                    try:
-                        birth_date = self.view.ask_player_birth_date()
-                    except ValueError:
-                        self.view.show_custom_error("La date de naissance n'est pas au format jj/mm/aaaa")
-                    else:
-                        break
-                string_date = birth_date.strftime("%d/%m/%Y")
-                Serializer.serialize_player(Player(name, first_name, string_date))
+                birth_date = self.get_date_from_user(self.view.ask_for_date,
+                                                     "Date de naissance (ex : 01/01/1900) : ")
+                Serializer.serialize_player(Player(name, first_name, birth_date))
                 # update view
                 self.view.players_list = Deserializer.deserialize_players()
             else:

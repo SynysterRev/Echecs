@@ -1,3 +1,5 @@
+import datetime
+
 from colorama import Fore, Style
 from custom_exception import OutOfRangeValueException
 from helpers.helper import Helper
@@ -39,3 +41,7 @@ class BasicView:
         for i in range(len(self.accessible_menus)):
             # ex : "1. Créer un tournoi"
             print(f"{i + 1}. {Helper.text_menu[self.accessible_menus[i]]}")
+
+    def ask_for_date(self, message_to_display):
+        date = str(input(message_to_display))
+        return datetime.datetime.strptime(date, "%d/%m/%Y")

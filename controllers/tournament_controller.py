@@ -1,4 +1,5 @@
 from controllers.base_controller import BaseController
+from helpers.deserializer import Deserializer
 from helpers.helper import Helper
 from models.tournament import Tournament
 from models.round import Round
@@ -18,11 +19,6 @@ class TournamentController(BaseController):
                                  Helper.get_modify_tournament_menu(),
                                  Helper.get_launch_tournament_menu(),
                                  Helper.get_main_menu())
-
-    def create_tournament(self, name, place, date, players, description, number_round):
-        for player in players:
-            self.players_encounters[player] = []
-        new_tournament = Tournament(name, place, date, players, description, number_round)
 
     def get_all_tournaments(self):
         pass
@@ -102,4 +98,24 @@ class TournamentController(BaseController):
     def run(self):
         self.view.accessible_menus = self.accessible_menus
         choice = self.get_user_choice()
-        return self.accessible_menus[choice]
+        if self.accessible_menus[choice] == Helper.get_main_menu():
+            return self.accessible_menus[choice]
+        if self.accessible_menus[choice] == Helper.get_new_tournament_menu():
+            self.create_tournament()
+
+
+
+    def create_tournament(self):
+        pass
+        tournament_name = self.view.ask_tournament_name()
+        tournament_place = self.view.ask_tournament_place()
+        tournament_date = self.get_date_from_user(self.view.ask_for_date,
+                                                  "Date de début (ex : 01/01/1900) : ")
+        tournament_rounds = self.view.ask_tournament_number_rounds()
+        tournament_description = self.view.ask_tournament_description()
+        players = Deserializer.deserialize_players()
+        # for player in players:
+        #     self.players_encounters[player] = []
+        new_tournament = Tournament(tournament_name, tournament_place, tournament_date, players,
+                                    tournament_description, tournament_rounds)
+

@@ -22,7 +22,3 @@ class PlayerView(BasicView):
 
     def ask_player_first_name(self):
         return str(input("Prenom : "))
-
-    def ask_player_birth_date(self):
-        date = str(input("Date de naissance (ex : 01/01/1900): "))
-        return datetime.datetime.strptime(date, "%d/%m/%Y")
