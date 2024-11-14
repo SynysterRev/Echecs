@@ -1,13 +1,12 @@
+import random
+
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
-from models.tournament import Tournament
-from models.round import Round
-from models.player import Player
+from helpers.serializer import Serializer
 from models.match import Match
-from models.match import MatchResult
-from typing import List
-import random
+from models.round import Round
+from models.tournament import Tournament
 
 
 class TournamentController(BaseController):
@@ -107,15 +106,23 @@ class TournamentController(BaseController):
 
     def create_tournament(self):
         pass
-        tournament_name = self.view.ask_tournament_name()
-        tournament_place = self.view.ask_tournament_place()
+        tournament_name = self.get_string_from_user("Nom : ")
+        tournament_place = self.get_string_from_user("Lieu : ")
         tournament_date = self.get_date_from_user(self.view.ask_for_date,
                                                   "Date de début (ex : 01/01/1900) : ")
-        tournament_rounds = self.view.ask_tournament_number_rounds()
+        tournament_rounds = 4
+        while True:
+            try:
+                tournament_rounds = self.view.ask_tournament_number_rounds()
+            except ValueError:
+                self.view.show_type_int_error()
+            else:
+                break
         tournament_description = self.view.ask_tournament_description()
         players = Deserializer.deserialize_players()
         # for player in players:
         #     self.players_encounters[player] = []
+
         new_tournament = Tournament(tournament_name, tournament_place, tournament_date, players,
                                     tournament_description, tournament_rounds)
-
+        Serializer.serialize_tournament(new_tournament)

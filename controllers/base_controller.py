@@ -28,3 +28,21 @@ class BaseController:
             else:
                 break
         return date.strftime("%d/%m/%Y")
+
+    def get_string_from_user(self, message_to_display):
+        while True:
+            try:
+                user_string = self.view.ask_for_string(message_to_display)
+            except ValueError:
+                self.view.show_type_string_error()
+            else:
+                return user_string
+
+    def get_int_from_user(self, message_to_display):
+        while True:
+            try:
+                user_int = self.view.ask_for_int(message_to_display)
+            except ValueError:
+                self.view.show_type_int_error()
+            else:
+                return user_int

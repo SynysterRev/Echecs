@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from colorama import Fore, Style
 from custom_exception import OutOfRangeValueException
@@ -37,6 +38,11 @@ class BasicView:
         print(error)
         print(Style.RESET_ALL)
 
+    def show_type_string_error(self):
+        print(Fore.YELLOW)
+        print("Veuillez entrer une chaîne de caractère")
+        print(Style.RESET_ALL)
+
     def display_accessible_menus(self):
         for i in range(len(self.accessible_menus)):
             # ex : "1. Créer un tournoi"
@@ -45,3 +51,13 @@ class BasicView:
     def ask_for_date(self, message_to_display):
         date = str(input(message_to_display))
         return datetime.datetime.strptime(date, "%d/%m/%Y")
+
+    def ask_for_string(self, message_to_display):
+        user_input = str(input(message_to_display))
+        if not re.search(r"[a-zA-Z]", user_input):
+            raise ValueError()
+        return user_input
+
+    def ask_for_int(self, message_to_display):
+        return str(int(message_to_display))
+

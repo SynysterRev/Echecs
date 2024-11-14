@@ -11,6 +11,10 @@ class Helper:
     def get_player_path(cls):
         return "data/" + cls.club_id + "/players/players.json"
 
+    @classmethod
+    def get_tournament_path(cls):
+        return "data/" + cls.club_id + "/tournaments/"
+
     @staticmethod
     def get_main_menu():
         return "main_menu"

@@ -49,3 +49,14 @@ class Tournament:
 
     def get_score(self, player):
         return self.points[player]
+
+    def serialize(self):
+        players_list = []
+        for player in self.players:
+            serialized_player = player.serialize()
+            serialized_player["points"] = self.get_score(player)
+            players_list.append(serialized_player)
+        return {"name": self.name, "place": self.place, "date_start": self.date_start, "date_end":
+            self.date_end, "players": players_list, "description": self.description,
+                "number_rounds": self.number_rounds, "current_round": self.current_round,
+                "rounds": self.rounds, "is_finished": self.is_finished}

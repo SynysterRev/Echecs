@@ -11,8 +11,23 @@ class Serializer:
         file_data = []
         file_path = Helper.get_player_path()
         if os.path.exists(file_path):
-            with open(Helper.get_player_path(), "r") as file:
+            with open(file_path, "r") as file:
                 file_data = json.load(file)
-                file_data.append(Player.serialize(player))
+        file_data.append(player.serialize())
         with open(file_path, "w+") as file:
             json.dump(file_data, file, indent=4, separators=(',',': '))
+
+    @staticmethod
+    def serialize_tournament(tournament):
+        file_path = Helper.get_tournament_path() + tournament.name + ".json"
+        try:
+            os.makedirs(Helper.get_tournament_path(), exist_ok=True)
+        except PermissionError:
+            print(f"Impossible de créer '{Helper.get_tournament_path()}', vous n'avez pas les droits.")
+            return
+        except Exception as e:
+            print(f"Une erreur s'est produite : {e}")
+            return
+        with open(file_path, "w") as file:
+            json.dump(tournament.serialize(), file, indent=4, separators=(',',': '))
+
