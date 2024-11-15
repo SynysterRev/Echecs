@@ -9,7 +9,7 @@ class PlayerController(BaseController):
     def __init__(self, view):
         super().__init__(view)
         self.accessible_menus = (Helper.get_add_player(),
-                                 Helper.get_quit())
+                                 Helper.get_main_menu())
 
     def run(self):
         players_list = Deserializer.deserialize_players()
