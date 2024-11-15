@@ -2,7 +2,8 @@ class Helper:
     club_id = ""
 
     text_menu = {"tournament_menu": "Gérer les tournois", "new_tournament": "Créer un nouveau tournoi",
-                 "modify_tournament": "Modifier un tournoi", "launch_tournament": "Démarrer un tournoi",
+                 "modify_tournament": "Modifier un tournoi", "start_tournament": "Démarrer un tournoi",
+                 "start_round": "Démarrer un tour", "start_match": "Démarrer un match",
                  "players_menu": "Gérer les joueurs", "add_player": "Ajouter un nouveau joueur",
                  "generate_reports": "Générer les rapports", "identification_menu": "Changer de club",
                  "quit": "Quitter", "main_menu": "Menu principal"}
@@ -44,8 +45,8 @@ class Helper:
         return "quit"
 
     @staticmethod
-    def get_launch_tournament_menu():
-        return "launch_tournament"
+    def get_start_tournament_menu():
+        return "start_tournament"
 
     @staticmethod
     def get_tournament_menu():
@@ -54,3 +55,11 @@ class Helper:
     @staticmethod
     def get_modify_tournament_menu():
         return "modify_tournament"
+
+    @staticmethod
+    def get_start_round_menu():
+        return "start_round"
+
+    @staticmethod
+    def get_start_match_menu():
+        return "start_match"

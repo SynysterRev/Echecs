@@ -4,12 +4,13 @@ from views.basic_view import BasicView
 
 
 class PlayerView(BasicView):
+    """Menu where user can add new players to the database"""
     def __init__(self):
         super().__init__()
         self.name = "Joueurs enregistrés"
         self.players_list = []
 
-    def show_menu(self):
+    def show_main_menu(self):
         self.show_heading_menu()
         for player in self.players_list:
             print(player)

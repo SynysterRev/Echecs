@@ -16,7 +16,7 @@ class PlayerController(BaseController):
         self.view.players_list = players_list
         self.view.accessible_menus = self.accessible_menus
         while True:
-            choice = self.get_user_choice()
+            choice = self.get_user_choice(self.view.show_main_menu)
             if choice == 0:
                 name = self.view.ask_player_name()
                 first_name = self.view.ask_player_first_name()

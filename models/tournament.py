@@ -1,21 +1,23 @@
 from datetime import datetime
 
+from models.player import Player
+
 
 class Tournament:
-    def __init__(self, name, place, date, players, description, number_rounds=4):
+    def __init__(self, name, place, date_start, players, description, number_rounds=4):
         """Construct a new tournament
 
         Parameters:
             name(string): name of the tournament
             place(string): where the tournament takes place
-            date(date): beginning of the tournament
+            date_start(date): beginning of the tournament
             players(list): participants
             description(string): some notes for the director
             number_rounds(int): number of rounds during the tournament, 4 by default
         """
         self.name = name
         self.place = place
-        self.date_start = date
+        self.date_start = date_start
         self.players = players
         self.description = description
         self.number_rounds = number_rounds
@@ -60,3 +62,30 @@ class Tournament:
             self.date_end, "players": players_list, "description": self.description,
                 "number_rounds": self.number_rounds, "current_round": self.current_round,
                 "rounds": self.rounds, "is_finished": self.is_finished}
+
+    @staticmethod
+    def deserialize(data) -> "Tournament":
+        name = data["name"]
+        place = data["place"]
+        date_start = data["date_start"]
+        date_end = data["date_end"]
+        players = []
+        points = {}
+        for registered_player in data["players"]:
+            player = Player(registered_player["name"], registered_player["first_name"], registered_player["birth_date"])
+            points[player] = registered_player["points"]
+            players.append(player)
+        description = data["description"]
+        number_rounds = data["number_rounds"]
+        current_round = data["current_round"]
+        rounds = data["rounds"]
+        is_finished = data["is_finished"]
+
+        tournament = Tournament(name, place, date_start, players, description, number_rounds)
+        tournament.players = players
+        tournament.current_round = current_round
+        tournament.rounds = rounds
+        tournament.is_finished = is_finished
+        tournament.points = points
+        tournament.date_end = date_end
+        return tournament

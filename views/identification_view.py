@@ -8,8 +8,8 @@ class IdentificationView(BasicView):
         super().__init__()
         self.name = "Menu identification"
 
-    def show_menu(self):
-        """First menu to get the club using the application"""
+    def show_main_menu(self):
+        """First menu to get the id of the club using the application"""
         self.show_heading_menu()
         club_id = str(input("Veuillez entrer l'identifiant du club : "))
         if not re.match(r"^[A-Z]{2}[1-9]{5}$", club_id):

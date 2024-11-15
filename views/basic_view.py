@@ -11,7 +11,7 @@ class BasicView:
         self.name = ""
         self.accessible_menus = ()
 
-    def show_menu(self):
+    def show_main_menu(self):
         self.show_heading_menu()
         self.display_accessible_menus()
         return self.ask_for_user_choice(len(self.accessible_menus))

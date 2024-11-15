@@ -2,16 +2,21 @@ from custom_exception import OutOfRangeValueException
 
 class BaseController:
     def __init__(self, view):
+        """Base controller
+
+        accessible_menus: id of all the menus that we can access from here
+        view: view managed by the controller
+        """
         self.view = view
         self.accessible_menus = ()
 
     def run(self):
         pass
 
-    def get_user_choice(self) -> int:
+    def get_user_choice(self, method_to_call) -> int:
         while True:
             try:
-                choice = self.view.show_menu()
+                choice = method_to_call()
             except ValueError:
                 self.view.show_type_int_error()
             except OutOfRangeValueException as exception:

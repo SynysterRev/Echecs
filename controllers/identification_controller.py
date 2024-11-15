@@ -10,7 +10,7 @@ class IdentificationController(BaseController):
     def run(self):
         while True:
             try:
-                club_id = self.view.show_menu()
+                club_id = self.view.show_main_menu()
             except ValueError:
                 self.view.show_type_int_error()
             except FormatIDException as id_exception:
