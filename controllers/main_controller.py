@@ -4,6 +4,7 @@ from controllers.identification_controller import IdentificationController
 from controllers.menu_controller import MenuController
 from controllers.player_controller import PlayerController
 from controllers.tournament_controller import TournamentController
+from controllers.tournament_flow_controller import TournamentFlowController
 from helpers.helper import Helper
 from custom_exception import MenuException
 
@@ -15,7 +16,8 @@ class MainController:
         starting_view = view_manager.views[Helper.get_identification_menu()]()
         id_controller = IdentificationController(starting_view)
         all_controllers = {Helper.get_main_menu(): MenuController, Helper.get_identification_menu(): IdentificationController,
-                           Helper.get_players_menu(): PlayerController, Helper.get_tournament_menu(): TournamentController}
+                           Helper.get_players_menu(): PlayerController, Helper.get_tournament_menu():
+                               TournamentController, Helper.get_start_tournament_menu(): TournamentFlowController}
         self.active_controller = id_controller
         self.controllers = all_controllers
         self.view_manager = view_manager

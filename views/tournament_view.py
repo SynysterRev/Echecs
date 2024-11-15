@@ -8,7 +8,7 @@ class TournamentView(BasicView):
     """Menu where user can manage tournaments"""
     def __init__(self):
         super().__init__()
-        self.name = "Tournoi"
+        self.name = "Gestion de tournoi"
         self.tournaments = {}
 
     def ask_tournament_number_rounds(self):

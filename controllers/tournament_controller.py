@@ -9,8 +9,7 @@ class TournamentController(BaseController):
     def __init__(self, view):
         super().__init__(view)
         self.accessible_menus = (Helper.get_new_tournament_menu(),
-                                 Helper.get_modify_tournament_menu(),
-                                 Helper.get_start_tournament_menu(),
+                                 # Helper.get_modify_tournament_menu(),
                                  Helper.get_main_menu())
 
     def run(self):
