@@ -21,8 +21,8 @@ class BasicView:
         print("\n" + self.name)
         print("--------------------------")
 
-    def ask_for_user_choice(self, number_max_to_enter):
-        choice = int(input("Tapez le numéro correspondant à l'action souhaitée : "))
+    def ask_for_user_choice(self, number_max_to_enter, text_to_display="Tapez le numéro correspondant à l'action souhaitée : "):
+        choice = int(input(text_to_display))
         if not (1 <= choice <= number_max_to_enter):
             raise OutOfRangeValueException(number_max_to_enter)
         # Since tuples start at 0

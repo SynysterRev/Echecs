@@ -1,5 +1,6 @@
-import datetime
+import re
 
+from custom_exception import FormatIDException
 from views.basic_view import BasicView
 
 
@@ -17,6 +18,12 @@ class PlayerView(BasicView):
         print()
         self.display_accessible_menus()
         return self.ask_for_user_choice(2)
+
+    def ask_player_id(self):
+        player_id = input("ID joueur : ")
+        if not re.match(r"^[A-Z]{2}[1-9]{5}$", player_id):
+            raise FormatIDException()
+        return player_id
 
     def ask_player_name(self):
         return str(input("Nom : "))

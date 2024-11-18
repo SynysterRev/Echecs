@@ -24,3 +24,6 @@ class Round:
         self.is_finished = True
         now = datetime.now()
         self.date_end = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    def is_started(self):
+        return False if not self.date_begin else True

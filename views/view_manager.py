@@ -1,6 +1,5 @@
 from custom_exception import ViewException
 from helpers.helper import Helper
-from views.identification_view import IdentificationView
 from views.menu_view import MenuView
 from views.player_view import PlayerView
 from views.tournament_flow_view import TournamentFlowView
@@ -9,9 +8,8 @@ from views.tournament_view import TournamentView
 
 class ViewManager:
     def __init__(self):
-        self.active_view = IdentificationView()
-        self.views = {Helper.get_identification_menu(): IdentificationView,
-                      Helper.get_main_menu(): MenuView,
+        self.active_view = MenuView()
+        self.views = {Helper.get_main_menu(): MenuView,
                       Helper.get_players_menu(): PlayerView,
                       Helper.get_tournament_menu(): TournamentView,
                       Helper.get_start_tournament_menu(): TournamentFlowView}

@@ -13,6 +13,13 @@ class TournamentFlowController(BaseController):
         self.players_encounters = {}
         self.players = []
         self.current_tournament = None
+        self.current_menu = "tournament_selection"
+        self.accessible_menus = (Helper.get_main_menu(),
+                                 "tournament_selection",
+                                 "round_start",
+                                 "matches_result")
+        self.current_round = None
+        self.matches = None
 
     def get_all_tournaments(self):
         pass
@@ -57,18 +64,20 @@ class TournamentFlowController(BaseController):
         return new_matches
 
     def start_round(self):
-        self.players = self.current_tournament.players
         if self.current_tournament.current_round == 1:
             for player in self.players:
                 self.players_encounters[player] = []
                 print(player)
         random.shuffle(self.players)
         matches = self.create_matches()
-        # current_round = Round()
-        # self.current_tournament.rounds
-        # current_round.start_round()
-        print(matches)
-        # round_matches = current_round.matches
+        self.matches = matches
+        self.view.matches = matches
+        current_round = Round(f"Round {self.current_tournament.current_round}", matches)
+        self.current_tournament.rounds.append(current_round)
+        self.current_round = current_round
+        current_round.start_round()
+        self.save()
+
 
     def get_matches_current_round(self):
         print("")
@@ -77,12 +86,56 @@ class TournamentFlowController(BaseController):
         while True:
             tournaments = Deserializer.deserialize_tournament()
             self.view.tournaments = tournaments
-            choice = self.get_user_choice(self.view.tournament_selection)
-            if choice == len(tournaments):
-                return Helper.get_main_menu()
-            self.current_tournament = tournaments[choice]
-            choice = self.view.ask_start_round(self.current_tournament.current_round)
-            if choice == 1:
-                continue
-            self.start_round()
-            self.create_matches()
+            match self.current_menu:
+                case "main_menu":
+                    return Helper.get_main_menu()
+
+                case "tournament_selection":
+                    choice = self.get_user_choice(self.view.tournament_selection)
+                    if choice == len(tournaments):
+                        self.current_menu = Helper.get_main_menu()
+                    else:
+                        # get selected tournament and current round and go to the next menu
+                        self.current_tournament = tournaments[choice]
+                        self.view.current_round = self.current_tournament.current_round
+                        self.current_menu = "round_start"
+
+                case "round_start":
+                    current_round = self.current_tournament.current_round
+                    round_started = False
+                    if current_round < len(self.current_tournament.rounds):
+                        self.current_round = self.current_tournament.rounds[current_round]
+                        round_started = self.current_round.is_started()
+                    if round_started:
+                        choice = self.get_user_choice(self.view.ask_continue_round)
+                    else:
+                        choice = self.get_user_choice(self.view.ask_start_round)
+                    # go back to tournament selection
+                    if choice == 1:
+                        self.current_menu = "tournament_selection"
+                    else:
+                        self.players = self.current_tournament.players
+                        if not round_started:
+                            self.start_round()
+                        else:
+                            self.view.matches = self.current_round.matches
+                        self.current_menu = "match_selection"
+
+                case "match_selection":
+                    choice = self.get_user_choice(self.view.matches_selection)
+                    if choice == len(tournaments):
+                        self.current_menu = "tournament_selection"
+                    else:
+                        self.current_menu = "match_result"
+                        self.view.current_match = self.matches[choice]
+
+                case "match_result":
+                    choice = self.get_user_choice(self.view.ask_match_result)
+                    print(choice)
+
+
+    def save(self):
+        pass
+
+# rich python
+# simple term menu

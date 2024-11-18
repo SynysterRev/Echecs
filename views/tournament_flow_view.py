@@ -9,28 +9,49 @@ class TournamentFlowView(BasicView):
         super().__init__()
         self.name = "Tournoi"
         self.tournaments = {}
+        self.current_round = None
+        self.matches = {}
+        self.current_match = None
 
-    def display_all_tournaments(self):
+    def tournament_selection(self):
         print("\nTournois enregistrés :")
         print("--------------------------")
         for i in range(len(self.tournaments)):
             print(f"{i + 1}. Tournoi : {self.tournaments[i].name}")
         print(f"{len(self.tournaments) + 1}. {Helper.text_menu[Helper.get_main_menu()]}")
+        return self.ask_for_user_choice(2, "Tapez le numéro correspondant au tournoi :")
 
-    def ask_tournament_selection(self):
-        choice = int(input("Tapez le numéro correspondant au tournoi : "))
-        # +1 cause we want to go back to previous menu
-        number_max_to_enter = len(self.tournaments) + 1
-        if not (1 <= choice <= number_max_to_enter):
-            raise OutOfRangeValueException(number_max_to_enter)
-        # Since tuples start at 0
-        return choice - 1
+    # def tournament_selection(self):
+    #     self.display_all_tournaments()
+    #     return self.ask_for_user_choice(2, "Tapez le numéro correspondant au tournoi :")
 
-    def tournament_selection(self):
-        self.display_all_tournaments()
-        return self.ask_tournament_selection()
-
-    def ask_start_round(self, current_round):
-        print(f"1. Démarrer le tour {current_round}")
+    def ask_start_round(self):
+        print("\nRound :")
+        print("--------------------------")
+        print(f"1. Démarrer le round {self.current_round}")
         print("2. Retour à la sélection")
         return self.ask_for_user_choice(2)
+
+    def ask_continue_round(self):
+        print("\nRound :")
+        print("--------------------------")
+        print(f"1. Continuer le round {self.current_round}")
+        print("2. Retour à la sélection")
+        return self.ask_for_user_choice(2)
+
+    def matches_selection(self):
+        print("\nMatchs :")
+        print("--------------------------")
+        for i in range(len(self.matches)):
+            print(f"{i + 1}. {self.matches[i]}")
+        print(f"{len(self.matches)}. Retour")
+        return self.ask_for_user_choice(len(self.matches) + 1, "Tapez le numéro correspondant au match :")
+
+    def ask_match_result(self):
+        print("\nRésultat :")
+        print("--------------------------")
+        print(f"1. {self.current_match.players_score[0][0]}")
+        print(f"2. {self.current_match.players_score[1][0]}")
+        print(f"3. Match nul")
+        return self.ask_for_user_choice(3, "Tapez le numéro correspondant au résultat du match :")
+

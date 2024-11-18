@@ -33,3 +33,6 @@ class Match:
     def update_player_two_score(self, value_to_add):
         self.players_score[1][1] += value_to_add
 
+    def __str__(self):
+        return f"{self.players_score[0][0]} contre {self.players_score[1][0]}"
+

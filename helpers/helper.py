@@ -1,6 +1,4 @@
 class Helper:
-    club_id = ""
-
     text_menu = {"tournament_menu": "Gérer les tournois", "new_tournament": "Créer un nouveau tournoi",
                  "modify_tournament": "Modifier un tournoi", "start_tournament": "Démarrer un tournoi",
                  "start_round": "Démarrer un tour", "start_match": "Démarrer un match",
@@ -10,11 +8,11 @@ class Helper:
 
     @classmethod
     def get_player_path(cls):
-        return "data/" + cls.club_id + "/players/players.json"
+        return "data/players/players.json"
 
     @classmethod
     def get_tournament_path(cls):
-        return "data/" + cls.club_id + "/tournaments/"
+        return "data/tournaments/"
 
     @staticmethod
     def get_main_menu():

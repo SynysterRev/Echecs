@@ -1,9 +1,4 @@
 from controllers.main_controller import MainController
-from controllers.identification_controller import IdentificationController
-from controllers.menu_controller import MenuController
-
-from controllers.player_controller import PlayerController
-from helpers.deserializer import Deserializer
 from views.view_manager import ViewManager
 
 
