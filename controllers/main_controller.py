@@ -12,7 +12,7 @@ class MainController:
     """Main controller"""
 
     def __init__(self, view_manager):
-        starting_view = view_manager.views[Helper.get_main_menu()]()
+        starting_view = view_manager.get_view(Helper.get_main_menu())
         id_controller = MenuController(starting_view)
         all_controllers = {Helper.get_main_menu(): MenuController,
                            Helper.get_players_menu(): PlayerController,
@@ -28,7 +28,7 @@ class MainController:
             next_menu_id = self.active_controller.run()
             controller_class = self.get_next_menu(next_menu_id)
             if controller_class is not None:
-                requested_view = self.view_manager.get_view(next_menu_id)()
+                requested_view = self.view_manager.get_view(next_menu_id)
                 new_controller = controller_class(requested_view)
                 self.active_controller = new_controller
             else:

@@ -7,9 +7,10 @@ from helpers.helper import Helper
 
 
 class BasicView:
-    def __init__(self):
+    def __init__(self, console):
         self.name = ""
         self.accessible_menus = ()
+        self.console = console
 
     def show_main_menu(self):
         self.show_heading_menu()

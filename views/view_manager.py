@@ -1,3 +1,5 @@
+from rich.console import Console
+
 from custom_exception import ViewException
 from helpers.helper import Helper
 from views.menu_view import MenuView
@@ -8,7 +10,8 @@ from views.tournament_view import TournamentView
 
 class ViewManager:
     def __init__(self):
-        self.active_view = MenuView()
+        self.console = Console()
+        self.active_view = MenuView(self.console)
         self.views = {Helper.get_main_menu(): MenuView,
                       Helper.get_players_menu(): PlayerView,
                       Helper.get_tournament_menu(): TournamentView,
@@ -24,4 +27,4 @@ class ViewManager:
         except ViewException as view_exception:
             print(view_exception)
             return None
-        return self.views[view_name]
+        return self.views[view_name](self.console)

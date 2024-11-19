@@ -11,12 +11,12 @@ class Player:
         name = json_text["name"]
         first_name = json_text["first_name"]
         birth_date = json_text["birth_date"]
-        return Player(id, name, first_name, birth_date)
+        return Player(player_id, name, first_name, birth_date)
 
     def serialize(self):
         return {"player_id": self.player_id, "name": self.name, "first_name": self.first_name, "birth_date":
             self.birth_date}
 
     def __str__(self):
-        return f"{self.first_name} {self.name} ({self.player_id})"
+        return f"{self.first_name} {self.name} (ID : {self.player_id})"
 

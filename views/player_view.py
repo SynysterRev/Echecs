@@ -2,12 +2,13 @@ import re
 
 from custom_exception import FormatIDException
 from views.basic_view import BasicView
-
+from rich.table import Table
+from rich.console import Console
 
 class PlayerView(BasicView):
     """Menu where user can add new players to the database"""
-    def __init__(self):
-        super().__init__()
+    def __init__(self, console):
+        super().__init__(console)
         self.name = "Joueurs enregistrés"
         self.players_list = []
 

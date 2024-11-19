@@ -9,7 +9,6 @@ class MenuController(BaseController):
                                  Helper.get_tournament_menu(),
                                  Helper.get_players_menu(),
                                  Helper.get_generate_reports_menu(),
-                                 Helper.get_identification_menu(),
                                  Helper.get_quit())
 
     def run(self):

@@ -6,8 +6,8 @@ from views.basic_view import BasicView
 
 class TournamentView(BasicView):
     """Menu where user can manage tournaments"""
-    def __init__(self):
-        super().__init__()
+    def __init__(self, console):
+        super().__init__(console)
         self.name = "Gestion de tournoi"
         self.tournaments = {}
 

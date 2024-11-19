@@ -19,10 +19,6 @@ class Helper:
         return "main_menu"
 
     @staticmethod
-    def get_identification_menu():
-        return "identification_menu"
-
-    @staticmethod
     def get_new_tournament_menu():
         return "new_tournament"
 

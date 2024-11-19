@@ -4,9 +4,9 @@ from views.basic_view import BasicView
 
 
 class TournamentFlowView(BasicView):
-    def __init__(self):
+    def __init__(self, console):
         """Menu where user can play a tournament"""
-        super().__init__()
+        super().__init__(console)
         self.name = "Tournoi"
         self.tournaments = {}
         self.current_round = None

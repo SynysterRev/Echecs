@@ -12,7 +12,10 @@ class Serializer:
         file_path = Helper.get_player_path()
         if os.path.exists(file_path):
             with open(file_path, "r") as file:
-                file_data = json.load(file)
+                try:
+                    file_data = json.load(file)
+                except json.decoder.JSONDecodeError:
+                    pass
         file_data.append(player.serialize())
         with open(file_path, "w+") as file:
             json.dump(file_data, file, indent=4, separators=(',',': '))

@@ -14,10 +14,13 @@ class Deserializer:
         file_path = Helper.get_player_path()
         if os.path.exists(file_path):
             with open(Helper.get_player_path(), "r") as file:
-                json_data = json.load(file)
-                for player in json_data:
-                    players_list.append(Player.deserialize(player))
-            return players_list
+                try:
+                    json_data = json.load(file)
+                    for player in json_data:
+                        players_list.append(Player.deserialize(player))
+                    return players_list
+                except json.decoder.JSONDecodeError:
+                    pass
         return []
 
     @staticmethod

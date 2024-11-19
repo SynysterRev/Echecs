@@ -72,7 +72,8 @@ class Tournament:
         players = []
         points = {}
         for registered_player in data["players"]:
-            player = Player(registered_player["name"], registered_player["first_name"], registered_player["birth_date"])
+            player = Player(registered_player["player_id"], registered_player["name"],
+                            registered_player["first_name"], registered_player["birth_date"])
             points[player] = registered_player["points"]
             players.append(player)
         description = data["description"]
