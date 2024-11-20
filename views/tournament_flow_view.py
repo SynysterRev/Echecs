@@ -7,7 +7,7 @@ class TournamentFlowView(BasicView):
     def __init__(self, console):
         """Menu where user can play a tournament"""
         super().__init__(console)
-        self.name = "Tournoi"
+        self.view_name = "Tournoi"
         self.tournaments = {}
         self.current_round = None
         self.matches = {}
@@ -17,7 +17,7 @@ class TournamentFlowView(BasicView):
         print("\nTournois enregistrés :")
         print("--------------------------")
         for i in range(len(self.tournaments)):
-            print(f"{i + 1}. Tournoi : {self.tournaments[i].name}")
+            print(f"{i + 1}. Tournoi : {self.tournaments[i].view_name}")
         print(f"{len(self.tournaments) + 1}. {Helper.text_menu[Helper.get_main_menu()]}")
         return self.ask_for_user_choice(2, "Tapez le numéro correspondant au tournoi :")
 

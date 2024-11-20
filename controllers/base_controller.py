@@ -1,3 +1,5 @@
+import threading
+
 from custom_exception import OutOfRangeValueException
 
 class BaseController:
@@ -9,9 +11,23 @@ class BaseController:
         """
         self.view = view
         self.accessible_menus = ()
+        self.click_event = threading.Event()
+        self.menu_selected = None
 
     def run(self):
-        pass
+        self.view.accessible_menus = self.accessible_menus
+        self.view.subscribe(self.on_click)
+        self.view.run()
+
+        self.click_event.wait()
+
+        return self.menu_selected
+
+    def on_click(self, value):
+        self.menu_selected = value
+        self.view.unsubscribe(self.on_click)
+        self.view.exit()
+        self.click_event.set()
 
     def get_user_choice(self, method_to_call) -> int:
         while True:

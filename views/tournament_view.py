@@ -8,7 +8,7 @@ class TournamentView(BasicView):
     """Menu where user can manage tournaments"""
     def __init__(self, console):
         super().__init__(console)
-        self.name = "Gestion de tournoi"
+        self.view_name = "Gestion de tournoi"
         self.tournaments = {}
 
     def ask_tournament_number_rounds(self):
@@ -24,7 +24,7 @@ class TournamentView(BasicView):
         print("\nTournois enregistrés :")
         print("--------------------------")
         for i in range(len(self.tournaments)):
-            print(f"{i + 1}. Tournoi : {self.tournaments[i].name}")
+            print(f"{i + 1}. Tournoi : {self.tournaments[i].view_name}")
         print(f"{len(self.tournaments) + 1}. Retour")
 
     def ask_tournament_selection(self):

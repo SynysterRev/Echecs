@@ -22,7 +22,7 @@ class Serializer:
 
     @staticmethod
     def serialize_tournament(tournament):
-        file_path = Helper.get_tournament_path() + tournament.name + ".json"
+        file_path = Helper.get_tournament_path() + tournament.view_name + ".json"
         try:
             os.makedirs(Helper.get_tournament_path(), exist_ok=True)
         except PermissionError:
