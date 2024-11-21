@@ -10,12 +10,15 @@ from textual.widgets import Button
 
 
 class BasicView(App):
+
+    CSS_PATH = "widgets/player.tcss"
     def __init__(self, console, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.view_name = ""
         self.accessible_menus = ()
         self.console = console
         self.subscribers = []
+        self.handle_event = False
 
     def subscribe(self, callback):
         self.subscribers.append(callback)
@@ -76,7 +79,3 @@ class BasicView(App):
     def compose(self) -> ComposeResult:
         for i in range(len(self.accessible_menus)):
             yield Button(Helper.text_menu[self.accessible_menus[i]], id=self.accessible_menus[i])
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        for callback in self.subscribers:
-            callback(event.button.id)

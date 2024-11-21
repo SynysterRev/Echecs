@@ -1,0 +1,26 @@
+LabelledInput {
+    layout: vertical;
+    width: auto;
+    height: auto;
+    padding: 0 1 0 1
+}
+		
+LabelledInput Label {
+	width: auto;
+    text-align: center;
+ }
+		
+LabelledInput Input {
+     width: 20;
+}
+
+NewPlayerWidget {
+    /*width: auto;
+    height: auto;*/
+    border: blank;
+    layout: horizontal;
+}
+
+NewPlayerWidget Button {
+	color: red;
+}
