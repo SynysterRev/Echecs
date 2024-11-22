@@ -35,3 +35,9 @@ class ViewException(Exception):
     def __init__(self, view_name):
         message = f"La vue {view_name} n'existe pas"
         super().__init__(message)
+
+class CustomException(Exception):
+    """View doesn't exist"""
+
+    def __init__(self):
+        super().__init__()

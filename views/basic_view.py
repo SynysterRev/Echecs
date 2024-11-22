@@ -1,9 +1,15 @@
 import datetime
 import re
+import os
 
 from colorama import Fore, Style
 from custom_exception import OutOfRangeValueException
 from helpers.helper import Helper
+from rich.text import Text
+from rich.table import Table
+from rich.align import Align
+from rich.panel import Panel
+from rich.prompt import Prompt
 
 
 class BasicView:
@@ -22,7 +28,8 @@ class BasicView:
         print("\n" + self.name)
         print("--------------------------")
 
-    def ask_for_user_choice(self, number_max_to_enter, text_to_display="Tapez le numéro correspondant à l'action souhaitée : "):
+    def ask_for_user_choice(self, number_max_to_enter,
+                            text_to_display="Tapez le numéro correspondant à l'action souhaitée : "):
         choice = int(input(text_to_display))
         if not (1 <= choice <= number_max_to_enter):
             raise OutOfRangeValueException(number_max_to_enter)
@@ -35,9 +42,7 @@ class BasicView:
         print(Style.RESET_ALL)
 
     def show_custom_error(self, error):
-        print(Fore.YELLOW)
-        print(error)
-        print(Style.RESET_ALL)
+        self.console.print(f"[red]{error}[/red]")
 
     def show_type_string_error(self):
         print(Fore.YELLOW)
@@ -50,7 +55,7 @@ class BasicView:
             print(f"{i + 1}. {Helper.text_menu[self.accessible_menus[i]]}")
 
     def ask_for_date(self, message_to_display):
-        date = str(input(message_to_display))
+        date = str(Prompt.ask(message_to_display))
         return datetime.datetime.strptime(date, "%d/%m/%Y")
 
     def ask_for_string(self, message_to_display):
@@ -62,3 +67,26 @@ class BasicView:
     def ask_for_int(self, message_to_display):
         return str(int(message_to_display))
 
+    def render(self, current_selection):
+        table = self.get_table_menu(current_selection)
+
+        panel_title = f"[bold magenta]{self.name}[/bold magenta]"
+
+        self.console.print(Panel(Align.center(table), title=panel_title))
+
+    def clear_view(self):
+        self.console.clear()
+        # os.system('clear || cls')
+
+    def get_table_menu(self, current_selection):
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        for index, menu in enumerate(self.accessible_menus):
+            if index == current_selection:
+                option_style = "bold white on blue"
+            else:
+                option_style = "white"
+
+            option_text = Text(menu, style=option_style)
+            table.add_row(option_text)
+        return table

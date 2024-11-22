@@ -1,9 +1,13 @@
+import sys
+
 from controllers.base_controller import BaseController
 from custom_exception import FormatIDException
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
 from models.player import Player
 from helpers.serializer import Serializer
+import re
+from rich.live import Live
 
 
 class PlayerController(BaseController):
@@ -16,23 +20,56 @@ class PlayerController(BaseController):
         players_list = Deserializer.deserialize_players()
         self.view.players_list = players_list
         self.view.accessible_menus = self.accessible_menus
-        while True:
-            choice = self.get_user_choice(self.view.show_main_menu)
-            if choice == 0:
-                while True:
-                    try:
-                        player_id = self.view.ask_player_id()
-                    except FormatIDException as id_exception:
-                        self.view.show_custom_error(id_exception)
-                    else:
-                        break
+        self.view.clear_view()
+        self.view.render(self.current_selection)
+        running = True
+        while running:
+            running = self.handle_input()
 
-                name = self.view.ask_player_name()
-                first_name = self.view.ask_player_first_name()
-                birth_date = self.get_date_from_user(self.view.ask_for_date,
-                                                     "Date de naissance (ex : 01/01/1900) : ")
-                Serializer.serialize_player(Player(player_id, name, first_name, birth_date))
-                # update view
-                self.view.players_list = Deserializer.deserialize_players()
-            else:
-                return Helper.get_main_menu()
+        # if self.current_selection == Helper.get_main_menu():
+        return Helper.get_main_menu()
+
+        self.view.accessible_menus = self.accessible_menus
+        self.view.clear_view()
+        self.view.render_new_player(self.current_selection)
+        while True:
+            a = 5
+        #     try:
+        #         player_id = self.view.ask_player_id()
+        #     except FormatIDException as id_exception:
+        #         self.view.show_custom_error(id_exception)
+        #     else:
+        #         break
+        # player_id = self.ask_prompt_with_validation(self.view.ask_player_id, self.test, "PAs bon id")
+        # name = self.view.ask_player_name()
+        # first_name = self.view.ask_player_first_name()
+        # birth_date = self.get_date_from_user(self.view.ask_for_date,
+        #                                      "Date de naissance (ex : 01/01/1900) : ")
+        # Serializer.serialize_player(Player(player_id, name, first_name, birth_date))
+
+    # running = self.handle_input()
+    # live.update(self.view.render(self.current_selection))
+
+    # while True:
+    #     choice = self.get_user_choice(self.view.show_main_menu)
+    #     if choice == 0:
+    #         while True:
+    #             try:
+    #                 player_id = self.view.ask_player_id()
+    #             except FormatIDException as id_exception:
+    #                 self.view.show_custom_error(id_exception)
+    #             else:
+    #                 break
+    #
+    #         name = self.view.ask_player_name()
+    #         first_name = self.view.ask_player_first_name()
+    #         birth_date = self.get_date_from_user(self.view.ask_for_date,
+    #                                              "Date de naissance (ex : 01/01/1900) : ")
+    #         Serializer.serialize_player(Player(player_id, name, first_name, birth_date))
+    #         # update view
+    #         self.view.players_list = Deserializer.deserialize_players()
+    #     else:
+    #         return Helper.get_main_menu()
+
+    def test(self, test):
+        return re.match(r"^[A-Z]{2}[1-9]{5}$", test)

@@ -11,7 +11,6 @@ from views.tournament_view import TournamentView
 class ViewManager:
     def __init__(self):
         self.console = Console()
-        self.active_view = MenuView(self.console)
         self.views = {Helper.get_main_menu(): MenuView,
                       Helper.get_players_menu(): PlayerView,
                       Helper.get_tournament_menu(): TournamentView,

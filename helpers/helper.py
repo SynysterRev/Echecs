@@ -1,3 +1,6 @@
+from rich.prompt import Prompt
+
+
 class Helper:
     text_menu = {"tournament_menu": "Gérer les tournois", "new_tournament": "Créer un nouveau tournoi",
                  "modify_tournament": "Modifier un tournoi", "start_tournament": "Démarrer un tournoi",
