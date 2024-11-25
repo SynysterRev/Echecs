@@ -1,10 +1,10 @@
-import sys
-from time import sleep
+import datetime
+import re
 
-import keyboard
+from pynput import keyboard
+from blessed import Terminal
 
 from custom_exception import OutOfRangeValueException, CustomException
-from rich.live import Live
 
 
 class BaseController:
@@ -22,12 +22,8 @@ class BaseController:
         self.view.accessible_menus = self.accessible_menus
         self.view.clear_view()
         self.view.render(self.current_selection)
-        running = True
-        while running:
-            running = self.handle_input()
-        # with Live(self.view.render(self.current_selection), refresh_per_second=10) as live:
-
-                # live.update(self.view.render(self.current_selection))
+        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
+            listener.join()
         return self.accessible_menus[self.current_selection]
 
     def get_user_choice(self, method_to_call) -> int:
@@ -69,17 +65,15 @@ class BaseController:
             else:
                 return user_int
 
-    def handle_input(self):
+    def handle_input(self, key):
         """Handle user input
-            return False if the user select a menu"""
-        event = keyboard.read_event()
-        if event.event_type == keyboard.KEY_DOWN and keyboard.is_pressed("up"):
+           return False if the user select a menu -> we don't need to wait for the user input anymore"""
+        if key == keyboard.Key.up:
             self.move_up()
-        if event.event_type == keyboard.KEY_DOWN and keyboard.is_pressed("down"):
+        if key == keyboard.Key.down:
             self.move_down()
-        if event.event_type == keyboard.KEY_DOWN and keyboard.is_pressed("enter"):
+        if key == keyboard.Key.enter:
             return False
-        return True
 
     def move_up(self):
         self.current_selection = (self.current_selection - 1) % len(self.accessible_menus)
@@ -91,15 +85,30 @@ class BaseController:
         self.view.clear_view()
         self.view.render(self.current_selection)
 
-    def ask_prompt_with_validation(self, view_method, validate_func=None,
-                                   error_message="Veuillez réessayer"):
-        while True:
-            user_input = view_method()
-            if validate_func is not None:
-                try:
-                    if validate_func(user_input):
-                        return user_input
+    def is_input_not_empty(self, user_input):
+        for char in user_input:
+            if char != " ":
+                return True
+
+    def validate_date(self, date):
+        try:
+            datetime.datetime.strptime(date, "%d/%m/%Y")
+            return True
+        except ValueError:
+            return False
+
+    def get_user_input(self, view_func, validate_func):
+        term = Terminal()
+        user_input = ""
+        with term.cbreak():
+            while True:
+                key = term.inkey(timeout=0.1)
+                if key:
+                    if key.name == "KEY_ENTER":
+                        if validate_func(user_input):
+                            return user_input
+                    elif key.name == "KEY_BACKSPACE":
+                        user_input = user_input[:-1]
                     else:
-                        raise CustomException
-                except CustomException:
-                    self.view.show_custom_error(error_message)
+                        user_input += key
+                    view_func(user_input)

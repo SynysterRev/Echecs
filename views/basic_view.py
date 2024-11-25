@@ -76,7 +76,6 @@ class BasicView:
 
     def clear_view(self):
         self.console.clear()
-        # os.system('clear || cls')
 
     def get_table_menu(self, current_selection):
         table = Table.grid(padding=1)
@@ -87,6 +86,6 @@ class BasicView:
             else:
                 option_style = "white"
 
-            option_text = Text(menu, style=option_style)
+            option_text = Text(Helper.text_menu[menu], style=option_style)
             table.add_row(option_text)
         return table
