@@ -2,7 +2,6 @@ from rich.align import Align
 from rich.console import Group
 from rich.padding import Padding
 from rich.panel import Panel
-from rich.prompt import Prompt
 from rich.table import Table
 from rich.text import Text
 
@@ -18,33 +17,16 @@ class PlayerView(BasicView):
         self.new_player_informations = ["ID joueur : ", "Nom : ", "Prénom : ", "Date de naissance : "]
         self.index_field = 0
 
-    def show_main_menu(self):
-        self.show_heading_menu()
-        for player in self.players_list:
-            print(player)
-        print()
-        self.display_accessible_menus()
-        return self.ask_for_user_choice(2)
-
-    def ask_player_id(self):
-        return Prompt.ask("ID joueur")
-
-    def ask_player_name(self):
-        return Prompt.ask("Nom")
-
-    def ask_player_first_name(self):
-        return Prompt.ask("Prénom")
-
     def render(self, current_selection):
-        table = Table()
+        table = Table(show_lines=True)
         table.add_column("ID", justify="center")
         table.add_column("Prénom", justify="center")
         table.add_column("Nom", justify="center")
         table.add_column("Date de naissance", justify="center")
 
         for player in self.players_list:
-            test = [player.player_id, player.first_name, player.name, player.birth_date]
-            table.add_row(*test)
+            row = [player.player_id, player.first_name, player.name, player.birth_date]
+            table.add_row(*row)
 
         padded_table = Padding(table, (1, 0, 0, 0))
 

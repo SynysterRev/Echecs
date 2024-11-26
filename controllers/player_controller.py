@@ -14,7 +14,6 @@ class PlayerController(BaseController):
         super().__init__(view)
         self.accessible_menus = (Helper.get_add_player(),
                                  Helper.get_main_menu())
-        # self.user_input = ""
         self.players_list = []
 
     def run(self):

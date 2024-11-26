@@ -90,6 +90,13 @@ class BaseController:
             if char != " ":
                 return True
 
+    def is_input_int(self, user_input):
+        try:
+            int(user_input)
+            return True
+        except ValueError:
+            return False
+
     def validate_date(self, date):
         try:
             datetime.datetime.strptime(date, "%d/%m/%Y")

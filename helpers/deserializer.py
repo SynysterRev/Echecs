@@ -33,5 +33,5 @@ class Deserializer:
                 with open(file_path + file, "r") as json_file:
                     json_data = json.load(json_file)
                     tournament_list.append(Tournament.deserialize(json_data))
-                return tournament_list
+            return tournament_list
         return []

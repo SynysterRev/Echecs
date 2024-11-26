@@ -1,3 +1,5 @@
+from pynput import keyboard
+
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
@@ -11,37 +13,58 @@ class TournamentController(BaseController):
         self.accessible_menus = (Helper.get_new_tournament_menu(),
                                  # Helper.get_modify_tournament_menu(),
                                  Helper.get_main_menu())
+        self.tournaments_list = []
+        self.players_list = []
 
     def run(self):
+        self.tournaments_list = Deserializer.deserialize_tournament()
+        self.players_list = Deserializer.deserialize_players()
+        self.view.tournaments = self.tournaments_list
         self.view.accessible_menus = self.accessible_menus
         while True:
-            choice = self.get_user_choice(self.view.show_main_menu)
-            if self.accessible_menus[choice] == Helper.get_new_tournament_menu():
-                self.create_tournament()
-            elif self.accessible_menus[choice] == Helper.get_modify_tournament_menu():
-                self.modify_tournament()
-            else:
-                return self.accessible_menus[choice]
+            self.view.clear_view()
+            self.view.render(self.current_selection)
+            with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
+                listener.join()
+
+            if self.accessible_menus[self.current_selection] == Helper.get_main_menu():
+                return Helper.get_main_menu()
+
+            self.create_tournament()
 
 
+    def handle_information_tournament_input(self, user_input):
+        self.view.clear_view()
+        self.view.render_new_tournament(user_input)
 
     def create_tournament(self):
-        tournament_name = self.get_string_from_user("Nom : ")
-        tournament_place = self.get_string_from_user("Lieu : ")
-        tournament_date = self.get_date_from_user(self.view.ask_for_date,
-                                                  "Date de début (ex : 01/01/1900) : ")
+        index_field = 0
+        self.view.clear_view()
+        self.view.render_new_tournament("")
+        method_per_index = {0: self.is_input_not_empty,
+                            1: self.is_input_not_empty,
+                            2: self.validate_date,
+                            3: self.is_input_not_empty,
+                            4: self.is_input_int}
+        new_tournament_informations = []
         while True:
-            try:
-                tournament_rounds = self.view.ask_tournament_number_rounds()
-            except ValueError:
-                self.view.show_type_int_error()
-            else:
+            final_input = self.get_user_input(self.handle_information_tournament_input,
+                                              method_per_index[index_field])
+            new_tournament_informations.append(final_input)
+            index_field += 1
+            if index_field == len(method_per_index):
                 break
-        tournament_description = self.view.ask_tournament_description()
-        players = Deserializer.deserialize_players()
-        new_tournament = Tournament(tournament_name, tournament_place, tournament_date, players,
-                                    tournament_description, tournament_rounds)
+            self.view.change_information_input_index(index_field)
+            self.view.validate_information(final_input, index_field - 1)
+            self.handle_information_tournament_input("")
+        new_tournament = Tournament(new_tournament_informations[0],
+                                    new_tournament_informations[1],
+                                    new_tournament_informations[2],
+                                    self.players_list,
+                                    new_tournament_informations[3],
+                                    new_tournament_informations[4])
         Serializer.serialize_tournament(new_tournament)
+        self.tournaments_list.append(new_tournament)
 
     # continue it if enough time
     def modify_tournament(self):
@@ -63,9 +86,7 @@ class TournamentController(BaseController):
         #
         #     current_round = Round("Round 1", matches)
         #     self.current_tournament.add_round(current_round)
-            # matches[0].set_winner(MatchResult.PLAYER_ONE)
-            # matches[0].update_player_one_score(1)
-            # matches[1].set_winner(MatchResult.PLAYER_TWO)
-            # matches[1].update_player_one_score(1)
-
-
+        # matches[0].set_winner(MatchResult.PLAYER_ONE)
+        # matches[0].update_player_one_score(1)
+        # matches[1].set_winner(MatchResult.PLAYER_TWO)
+        # matches[1].update_player_one_score(1)
