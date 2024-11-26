@@ -104,9 +104,9 @@ class BaseController:
         except ValueError:
             return False
 
-    def get_user_input(self, view_func, validate_func):
+    def get_user_input(self, view_func, validate_func, default_input=""):
         term = Terminal()
-        user_input = ""
+        user_input = default_input
         with term.cbreak():
             while True:
                 key = term.inkey(timeout=0.1)
