@@ -20,6 +20,7 @@ class PlayerController(BaseController):
         self.players_list = Deserializer.deserialize_players()
         self.view.players_list = self.players_list
         self.view.accessible_menus = self.accessible_menus
+        self.max_selection = len(self.accessible_menus)
         while True:
             self.view.clear_view()
             self.view.render(self.current_selection)

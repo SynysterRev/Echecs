@@ -1,5 +1,7 @@
 import random
 
+from pynput import keyboard
+
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
@@ -12,14 +14,16 @@ class TournamentFlowController(BaseController):
         super().__init__(view)
         self.players_encounters = {}
         self.players = []
+        self.tournaments = []
         self.current_tournament = None
-        self.current_menu = "tournament_selection"
         self.accessible_menus = (Helper.get_main_menu(),
-                                 "tournament_selection",
-                                 "round_start",
-                                 "matches_result")
+                                 Helper.get_start_tournament_menu(),
+                                 Helper.get_start_round_menu(),
+                                 Helper.get_start_match_menu(),
+                                 Helper.get_match_result_menu())
         self.current_round = None
         self.matches = None
+        self.current_menu = 1
 
     def get_all_tournaments(self):
         pass
@@ -31,7 +35,7 @@ class TournamentFlowController(BaseController):
         if self.current_tournament is None:
             raise NoTournamentException()
 
-        current_round = self.current_tournament.rounds[self.current_tournament.current_round]
+        current_round = self.current_tournament.rounds[self.current_tournament.current_round_index]
         current_round.start_round()
 
     def sort_player_by_points(self, player):
@@ -64,7 +68,7 @@ class TournamentFlowController(BaseController):
         return new_matches
 
     def start_round(self):
-        if self.current_tournament.current_round == 1:
+        if self.current_tournament.current_round_index == 1:
             for player in self.players:
                 self.players_encounters[player] = []
                 print(player)
@@ -72,70 +76,109 @@ class TournamentFlowController(BaseController):
         matches = self.create_matches()
         self.matches = matches
         self.view.matches = matches
-        current_round = Round(f"Round {self.current_tournament.current_round}", matches)
+        current_round = Round(f"Round {self.current_tournament.current_round_index}", matches)
         self.current_tournament.rounds.append(current_round)
         self.current_round = current_round
         current_round.start_round()
         self.save()
 
-
     def get_matches_current_round(self):
         print("")
 
     def run(self):
+        self.tournaments = Deserializer.deserialize_tournament()
+        self.view.tournaments = self.tournaments
+        test = {0: None, 1: self.select_tournament, 2: self.select_round}
         while True:
-            tournaments = Deserializer.deserialize_tournament()
-            self.view.tournaments = tournaments
-            match self.current_menu:
-                case "main_menu":
-                    return Helper.get_main_menu()
-
-                case "tournament_selection":
-                    choice = self.get_user_choice(self.view.tournament_selection)
-                    if choice == len(tournaments):
-                        self.current_menu = Helper.get_main_menu()
-                    else:
-                        # get selected tournament and current round and go to the next menu
-                        self.current_tournament = tournaments[choice]
-                        self.view.current_round = self.current_tournament.current_round
-                        self.current_menu = "round_start"
-
-                case "round_start":
-                    current_round = self.current_tournament.current_round
-                    round_started = False
-                    if current_round < len(self.current_tournament.rounds):
-                        self.current_round = self.current_tournament.rounds[current_round]
-                        round_started = self.current_round.is_started()
-                    if round_started:
-                        choice = self.get_user_choice(self.view.ask_continue_round)
-                    else:
-                        choice = self.get_user_choice(self.view.ask_start_round)
-                    # go back to tournament selection
-                    if choice == 1:
-                        self.current_menu = "tournament_selection"
-                    else:
-                        self.players = self.current_tournament.players
-                        if not round_started:
-                            self.start_round()
-                        else:
-                            self.view.matches = self.current_round.matches
-                        self.current_menu = "match_selection"
-
-                case "match_selection":
-                    choice = self.get_user_choice(self.view.matches_selection)
-                    if choice == len(tournaments):
-                        self.current_menu = "tournament_selection"
-                    else:
-                        self.current_menu = "match_result"
-                        self.view.current_match = self.matches[choice]
-
-                case "match_result":
-                    choice = self.get_user_choice(self.view.ask_match_result)
-                    print(choice)
-
+            func = test[self.current_menu]
+            if self.current_menu == 0:
+                return Helper.get_main_menu()
+            func()
+            # match self.current_selection:
+            #     case self.accessible_menus[0]:
+            #         return Helper.get_main_menu()
+            #
+            #     case Helper.get_start_tournament_menu():
+            #         self.view.accessible_menus = [Helper.get_start_round_menu(), Helper.get_main_menu()]
+            #         with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
+            #             listener.join()
+            #         if self.current_selection != 1:
+            #             # get selected tournament and current round and go to the next menu
+            #             self.current_tournament = tournaments[choice]
+            #             self.view.current_round = self.current_tournament.current_round
+            #
+            #     case Helper.get_start_round_menu():
+            #         current_round = self.current_tournament.current_round
+            #         round_started = False
+            #         if current_round < len(self.current_tournament.rounds):
+            #             self.current_round = self.current_tournament.rounds[current_round]
+            #             round_started = self.current_round.is_started()
+            #             if round_started:
+            #                 choice = self.get_user_choice(self.view.ask_continue_round)
+            #             else:
+            #                 choice = self.get_user_choice(self.view.ask_start_round)
+            #         else:
+            #             self.players = self.current_tournament.players
+            #             if not round_started:
+            #                 self.start_round()
+            #             else:
+            #                 self.view.matches = self.current_round.matches
+            #
+            #     case Helper.get_start_match_menu():
+            #         pass
+            #         # choice = self.get_user_choice(self.view.matches_selection)
+            #         # else:
+            #         #     self.view.current_match = self.matches[choice]
+            #
+            #     case Helper.get_match_result_menu():
+            #         choice = self.get_user_choice(self.view.ask_match_result)
+            #         print(choice)
 
     def save(self):
         pass
 
-# rich python
-# simple term menu
+    def select_tournament(self):
+        self.view.clear_view()
+        self.max_selection = len(self.tournaments) + 1
+        self.view.render_tournament_selection(self.current_selection)
+        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
+            listener.join()
+        if self.current_selection != self.max_selection - 1:
+            # get selected tournament and current round and go to the next menu
+            self.current_tournament = self.tournaments[self.current_selection]
+            self.view.current_round_index = self.current_tournament.current_round_index
+            self.current_menu = 2
+        else:
+            self.current_menu = 0
+
+    def select_round(self):
+        self.view.clear_view()
+        self.current_selection = 0
+        # current round and back menu
+        self.max_selection = 2
+        current_round_index = self.current_tournament.current_round_index
+        round_started = False
+        if current_round_index < len(self.current_tournament.rounds):
+            self.current_round = self.current_tournament.rounds[current_round_index]
+            round_started = self.current_round.is_started()
+        self.view.current_round_index = current_round_index
+        self.view.render_start_round(self.current_selection)
+        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
+            listener.join()
+        if self.current_selection == 1:
+            self.current_menu = 1
+        else:
+            self.players = self.current_tournament.players
+            if not round_started:
+                self.start_round()
+            else:
+                self.view.matches = self.current_round.matches
+            self.current_menu = 3
+
+
+    def render_view(self):
+        self.view.clear_view()
+        if self.current_menu == 1 :
+            self.view.render_tournament_selection(self.current_selection)
+        elif self.current_menu == 2 :
+            self.view.render_start_round(self.current_selection)

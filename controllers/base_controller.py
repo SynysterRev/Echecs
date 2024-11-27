@@ -1,5 +1,4 @@
 import datetime
-import re
 
 from pynput import keyboard
 from blessed import Terminal
@@ -17,11 +16,13 @@ class BaseController:
         self.view = view
         self.accessible_menus = ()
         self.current_selection = 0
+        self.max_selection = 0
 
     def run(self):
         self.view.accessible_menus = self.accessible_menus
         self.view.clear_view()
         self.view.render(self.current_selection)
+        self.max_selection = len(self.accessible_menus)
         with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
             listener.join()
         return self.accessible_menus[self.current_selection]
@@ -76,12 +77,14 @@ class BaseController:
             return False
 
     def move_up(self):
-        self.current_selection = (self.current_selection - 1) % len(self.accessible_menus)
-        self.view.clear_view()
-        self.view.render(self.current_selection)
+        self.current_selection = (self.current_selection - 1) % self.max_selection
+        self.render_view()
 
     def move_down(self):
-        self.current_selection = (self.current_selection + 1) % len(self.accessible_menus)
+        self.current_selection = (self.current_selection + 1) % self.max_selection
+        self.render_view()
+
+    def render_view(self):
         self.view.clear_view()
         self.view.render(self.current_selection)
 

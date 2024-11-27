@@ -21,7 +21,7 @@ class Tournament:
         self.players = players
         self.description = description
         self.number_rounds = number_rounds
-        self.current_round = 1
+        self.current_round_index = 1
         self.rounds = []
         self.date_end = ""
         self.is_finished = False
@@ -35,7 +35,7 @@ class Tournament:
         self.is_finished = True
 
     def change_round(self, new_round):
-        self.current_round = new_round
+        self.current_round_index = new_round
 
     def modify_description(self, new_description):
         self.description = new_description
@@ -60,7 +60,7 @@ class Tournament:
             players_list.append(serialized_player)
         return {"name": self.name, "place": self.place, "date_start": self.date_start, "date_end":
             self.date_end, "players": players_list, "description": self.description,
-                "number_rounds": self.number_rounds, "current_round": self.current_round,
+                "number_rounds": self.number_rounds, "current_round_index": self.current_round_index,
                 "rounds": self.rounds, "is_finished": self.is_finished}
 
     @staticmethod
@@ -78,13 +78,13 @@ class Tournament:
             players.append(player)
         description = data["description"]
         number_rounds = data["number_rounds"]
-        current_round = data["current_round"]
+        current_round_index = data["current_round_index"]
         rounds = data["rounds"]
         is_finished = data["is_finished"]
 
         tournament = Tournament(name, place, date_start, players, description, number_rounds)
         tournament.players = players
-        tournament.current_round = current_round
+        tournament.current_round_index = current_round_index
         tournament.rounds = rounds
         tournament.is_finished = is_finished
         tournament.points = points

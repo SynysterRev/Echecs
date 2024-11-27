@@ -20,6 +20,7 @@ class TournamentController(BaseController):
         self.tournaments_list = Deserializer.deserialize_tournament()
         self.players_list = Deserializer.deserialize_players()
         self.view.tournaments = self.tournaments_list
+        self.max_selection = len(self.accessible_menus)
         self.view.accessible_menus = self.accessible_menus
         while True:
             self.view.clear_view()

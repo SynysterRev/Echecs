@@ -1,13 +1,10 @@
-from rich.prompt import Prompt
-
-
 class Helper:
     text_menu = {"tournament_menu": "Gérer les tournois", "new_tournament": "Créer un nouveau tournoi",
                  "modify_tournament": "Modifier un tournoi", "start_tournament": "Démarrer un tournoi",
                  "start_round": "Démarrer un tour", "start_match": "Démarrer un match",
                  "players_menu": "Gérer les joueurs", "add_player": "Ajouter un nouveau joueur",
-                 "generate_reports": "Générer les rapports", "identification_menu": "Changer de club",
-                 "quit": "Quitter", "main_menu": "Menu principal"}
+                 "generate_reports": "Générer les rapports", "quit": "Quitter", "main_menu": "Menu principal",
+                 "match_result": "Résultat du match"}
 
     @classmethod
     def get_player_path(cls):
@@ -60,3 +57,7 @@ class Helper:
     @staticmethod
     def get_start_match_menu():
         return "start_match"
+
+    @staticmethod
+    def get_match_result_menu():
+        return "match_result"
