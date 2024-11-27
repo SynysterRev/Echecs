@@ -6,6 +6,7 @@ class MatchResult(Enum):
     PLAYER_TWO = 2
     DRAW = 3
 
+
 class Match:
     def __init__(self, player_one, player_two):
         """Construct a tuple with two lists
@@ -20,19 +21,20 @@ class Match:
 
     def set_winner(self, result: MatchResult):
         if result == MatchResult.PLAYER_ONE:
-            self.winner = self.players_score[0]
+            self.winner = self.players_score[0][0]
+            self.players_score = ([self.winner, 1], [self.players_score[1][0], 0])
         elif result == MatchResult.PLAYER_TWO:
-            self.winner = self.players_score[1]
+            self.winner = self.players_score[1][0]
+            self.players_score = ([self.players_score[0][0], 0], [self.winner, 1])
         else:
-            self.winner = None
+            self.winner = "Match nul"
+            self.players_score = ([self.players_score[0][0], 0.5], [self.players_score[1][0], 0.5])
         self.is_finished = True
-
-    def update_player_one_score(self, value_to_add):
-        self.players_score[0][1] += value_to_add
-
-    def update_player_two_score(self, value_to_add):
-        self.players_score[1][1] += value_to_add
 
     def __str__(self):
         return f"{self.players_score[0][0]} contre {self.players_score[1][0]}"
 
+    def serialize(self):
+        return {"players_score": [(self.players_score[0][0].player_id, self.players_score[0][1]),
+                                  (self.players_score[1][0].player_id, self.players_score[1][1])],
+                "is_finished": self.is_finished}

@@ -75,7 +75,8 @@ class BasicView:
         self.console.print(Panel(Align.center(table), title=panel_title))
 
     def clear_view(self):
-        self.console.clear()
+        # self.console.clear()
+        self.cls()
 
     def get_table_menu(self, current_selection):
         table = Table.grid(padding=1)
@@ -89,3 +90,6 @@ class BasicView:
             option_text = Text(Helper.text_menu[menu], style=option_style)
             table.add_row(option_text)
         return table
+
+    def cls(self):
+        os.system('cls' if os.name == 'nt' else 'clear')

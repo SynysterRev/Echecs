@@ -62,9 +62,52 @@ class TournamentFlowView(BasicView):
         option_text = Text("Retour", style=option_style)
         table.add_row(option_text)
 
-        panel_title = f"[bold magenta]{self.name}[/bold magenta]"
+        panel_title = f"[bold magenta]{"Rounds"}[/bold magenta]"
         panel = Panel(Align.center(table), title=panel_title)
         self.console.print(panel)
+
+    def render_select_match(self, current_selection):
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        for index, match in enumerate(self.matches):
+            if index == current_selection:
+                option_style = "bold white on blue"
+            else:
+                option_style = "white"
+
+            option_text = Text(str(match), style=option_style)
+            table.add_row(option_text)
+
+        if current_selection == len(self.matches):
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+
+        option_text = Text("Retour", style=option_style)
+        table.add_row(option_text)
+
+        panel_title = f"[bold magenta]{"Matchs"}[/bold magenta]"
+        panel = Panel(Align.center(table), title=panel_title)
+        self.console.print(panel)
+
+    def render_match_result(self, current_selection):
+        options = [self.current_match.players_score[0][0], self.current_match.players_score[1][0],
+                   "Match nul", "Retour"]
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        for index, option in enumerate(options):
+            if index == current_selection:
+                option_style = "bold white on blue"
+            else:
+                option_style = "white"
+            option_text = Text(str(option), style=option_style)
+            table.add_row(option_text)
+
+
+        panel_title = f"[bold magenta]{"Résultat"}[/bold magenta]"
+        panel = Panel(Align.center(table), title=panel_title)
+        self.console.print(panel)
+
 
     def ask_start_round(self):
         print("\nRound :")

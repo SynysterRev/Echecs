@@ -58,10 +58,13 @@ class Tournament:
             serialized_player = player.serialize()
             serialized_player["points"] = self.get_score(player)
             players_list.append(serialized_player)
+        rounds_list = []
+        for round in self.rounds:
+            rounds_list.append(round.serialize())
         return {"name": self.name, "place": self.place, "date_start": self.date_start, "date_end":
             self.date_end, "players": players_list, "description": self.description,
                 "number_rounds": self.number_rounds, "current_round_index": self.current_round_index,
-                "rounds": self.rounds, "is_finished": self.is_finished}
+                "rounds": rounds_list, "is_finished": self.is_finished}
 
     @staticmethod
     def deserialize(data) -> "Tournament":
