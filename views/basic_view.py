@@ -10,6 +10,7 @@ from rich.table import Table
 from rich.align import Align
 from rich.panel import Panel
 from rich.prompt import Prompt
+from rich.padding import Padding
 
 
 class BasicView:
@@ -71,12 +72,12 @@ class BasicView:
         table = self.get_table_menu(current_selection)
 
         panel_title = f"[bold magenta]{self.name}[/bold magenta]"
-
+        table = Padding(table, (1, 0, 1, 0))
         self.console.print(Panel(Align.center(table), title=panel_title))
 
     def clear_view(self):
-        # self.console.clear()
-        self.cls()
+        self.console.clear()
+        # self.cls()
 
     def get_table_menu(self, current_selection):
         table = Table.grid(padding=1)

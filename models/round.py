@@ -31,6 +31,12 @@ class Round:
     def get_number_matches(self) -> int :
         return len(self.matches)
 
+    def get_number_matches_not_played(self) -> int :
+        return sum(not match.is_finished for match in self.matches)
+
+    def get_matches_not_played(self):
+        return [match for match in self.matches if not match.is_finished]
+
     def serialize(self):
         matches_list = []
         for match in self.matches:

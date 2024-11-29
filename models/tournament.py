@@ -52,6 +52,12 @@ class Tournament:
     def get_score(self, player):
         return self.points[player]
 
+    def increase_score(self, player, points):
+        self.points[player] += points
+
+    def are_all_rounds_over(self) -> bool:
+        return self.current_round_index > self.number_rounds
+
     def serialize(self):
         players_list = []
         for player in self.players:
