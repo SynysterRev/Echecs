@@ -5,6 +5,7 @@ from pynput import keyboard
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
+from helpers.serializer import Serializer
 from models.match import Match, MatchResult
 from models.round import Round
 
@@ -34,15 +35,16 @@ class TournamentFlowController(BaseController):
         current_round.start_round()
 
     def is_match_already_done(self, players_encounters, player_one, player_two):
-        if player_one in players_encounters:
-            return player_two in players_encounters[player_one]
+        if player_one.player_id in players_encounters:
+            return any(player_two.player_id == player
+                       for player in players_encounters[player_one.player_id])
         return False
-
+    # revoir algo
     def get_best_match(self, players_encounters, current_player, all_players):
         for player in all_players[1:]:
             if not self.is_match_already_done(players_encounters, current_player[0], player[0]):
-                players_encounters[current_player[0]].append(player[0])
-                players_encounters[player[0]].append(current_player[0])
+                players_encounters[current_player[0].player_id].append(player[0].player_id)
+                players_encounters[player[0].player_id].append(current_player[0].player_id)
                 return Match(current_player, player)
 
     def create_matches(self):
@@ -60,13 +62,10 @@ class TournamentFlowController(BaseController):
         return new_matches
 
     def start_round(self):
-        if self.current_tournament.current_round_index == 1:
-            for player in self.players:
-                self.players_encounters[player] = []
         random.shuffle(self.players)
         matches = self.create_matches()
         self.matches = matches
-        current_round = Round(f"Round {self.current_tournament.current_round_index}", matches)
+        current_round = Round(f"Round {self.current_tournament.current_round_index + 1}", matches)
         self.current_tournament.rounds.append(current_round)
         self.current_round = current_round
         current_round.start_round()
@@ -79,17 +78,28 @@ class TournamentFlowController(BaseController):
                 3: self.select_match, 4: self.select_match_result,
                 5: self.tournament_over}
         while True:
+            self.current_selection = 0
+            self.view.clear_view()
             func = test[self.current_menu]
             if self.current_menu == 0:
                 return Helper.get_main_menu()
             func()
 
     def save(self):
-        pass
-        # Serializer.serialize_tournament(self.current_tournament)
+        Serializer.serialize_tournament(self.current_tournament)
+
+    def get_encounters_for_players(self):
+        self.players = self.current_tournament.players
+        for player in self.players:
+            self.players_encounters[player.player_id] = []
+        for round in self.current_tournament.rounds:
+            for match in round.matches:
+                player_one = match.get_player_one()
+                player_two = match.get_player_two()
+                self.players_encounters[player_one.player_id].append(player_two.player_id)
+                self.players_encounters[player_two.player_id].append(player_one.player_id)
 
     def select_tournament(self):
-        self.view.clear_view()
         self.max_selection = len(self.tournaments) + 1
         self.view.render_tournament_selection(self.current_selection)
         with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
@@ -97,19 +107,19 @@ class TournamentFlowController(BaseController):
         if self.current_selection != self.max_selection - 1:
             # get selected tournament and current round and go to the next menu
             self.current_tournament = self.tournaments[self.current_selection]
+            self.get_encounters_for_players()
             self.view.current_round_index = self.current_tournament.current_round_index
             self.current_menu = 2
         else:
             self.current_menu = 0
 
     def select_round(self):
-        self.view.clear_view()
-        self.current_selection = 0
         # current round and back menu
         self.max_selection = 2
         current_round_index = self.current_tournament.current_round_index
         round_started = False
-        if current_round_index < len(self.current_tournament.rounds):
+        current_number_round = len(self.current_tournament.rounds)
+        if current_round_index == current_number_round - 1:
             self.current_round = self.current_tournament.rounds[current_round_index]
             round_started = self.current_round.is_started()
         self.view.current_round_index = current_round_index
@@ -119,15 +129,12 @@ class TournamentFlowController(BaseController):
         if self.current_selection == 1:
             self.current_menu = 1
         else:
-            self.players = self.current_tournament.players
             if not round_started:
                 self.start_round()
             self.current_menu = 3
         self.save()
 
     def select_match(self):
-        self.view.clear_view()
-        self.current_selection = 0
         number_match_to_do = self.current_round.get_number_matches_not_played()
         self.max_selection = (number_match_to_do if number_match_to_do > 0 else 1) + 1
         self.view.matches = self.current_round.matches
@@ -154,8 +161,6 @@ class TournamentFlowController(BaseController):
         return True
 
     def select_match_result(self):
-        self.view.clear_view()
-        self.current_selection = 0
         # player1/player2/draw/back
         self.max_selection = 4
         self.view.current_match = self.current_match
@@ -188,8 +193,6 @@ class TournamentFlowController(BaseController):
             self.current_menu = 2
 
     def tournament_over(self):
-        self.view.clear_view()
-        self.current_selection = 0
         # Ok
         self.max_selection = 1
         self.current_tournament.points = dict(sorted(self.current_tournament.points.items(), key=lambda item: item[1],

@@ -1,5 +1,7 @@
 from enum import Enum
 
+from models.player import Player
+
 
 class MatchResult(Enum):
     PLAYER_ONE = 1
@@ -46,8 +48,21 @@ class Match:
     def __str__(self):
         return f"{self.players_score[0][0]} contre {self.players_score[1][0]}"
 
+    @staticmethod
+    def deserialize(json_text) -> "Match":
+        player_one = Player.deserialize(json_text["player_one"][0])
+        player_one_point = json_text["player_one"][1]
+        player_two = Player.deserialize(json_text["player_two"][0])
+        player_two_point = json_text["player_two"][1]
+        winner = json_text["winner"]
+        is_finished = json_text["is_finished"]
+        match = Match([player_one, player_one_point], [player_two, player_two_point])
+        match.winner = winner
+        match.is_finished = is_finished
+        return match
+
     def serialize(self):
-        print(self.players_score[0][0].player_id)
-        return {"players_score": [(self.players_score[0][0].player_id, self.players_score[0][1]),
-                                  (self.players_score[1][0].player_id, self.players_score[1][1])],
+        return {"player_one": (self.players_score[0][0].serialize(), self.players_score[0][1]),
+                "player_two":(self.players_score[1][0].serialize(), self.players_score[1][1]),
+                "winner": self.winner,
                 "is_finished": self.is_finished}
