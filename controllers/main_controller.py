@@ -2,6 +2,7 @@ import sys
 
 from controllers.menu_controller import MenuController
 from controllers.player_controller import PlayerController
+from controllers.report_controller import ReportController
 from controllers.tournament_controller import TournamentController
 from controllers.tournament_flow_controller import TournamentFlowController
 from helpers.helper import Helper
@@ -17,7 +18,8 @@ class MainController:
         all_controllers = {Helper.get_main_menu(): MenuController,
                            Helper.get_players_menu(): PlayerController,
                            Helper.get_tournament_menu(): TournamentController,
-                           Helper.get_start_tournament_menu(): TournamentFlowController}
+                           Helper.get_start_tournament_menu(): TournamentFlowController,
+                           Helper.get_generate_reports_menu(): ReportController}
         self.active_controller = id_controller
         self.controllers = all_controllers
         self.view_manager = view_manager

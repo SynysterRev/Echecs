@@ -1,6 +1,5 @@
 from controllers.base_controller import BaseController
 from helpers.helper import Helper
-from rich.live import Live
 
 
 class MenuController(BaseController):

@@ -5,6 +5,13 @@ class NoTournamentException(Exception):
         message = message or "No tournament selected"
         super().__init__(message)
 
+class EmptyStringException(Exception):
+    """User enter empty string"""
+
+    def __init__(self):
+        message = "Veuillez remplir ce champ"
+        super().__init__(message)
+
 
 class OutOfRangeValueException(Exception):
     """User enter incorrect value"""

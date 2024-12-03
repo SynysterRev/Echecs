@@ -49,7 +49,7 @@ class TournamentController(BaseController):
                             4: self.is_input_int}
         new_tournament_informations = []
         while True:
-            default_input_value = "" if index_field == 0 else "4"
+            default_input_value = "4" if index_field == 4 else ""
             final_input = self.get_user_input(self.handle_information_tournament_input,
                                               method_per_index[index_field], default_input_value)
             new_tournament_informations.append(final_input)

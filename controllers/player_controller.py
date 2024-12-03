@@ -3,6 +3,7 @@ import re
 from pynput import keyboard
 
 from controllers.base_controller import BaseController
+from custom_exception import EmptyStringException
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
 from helpers.serializer import Serializer
@@ -39,8 +40,14 @@ class PlayerController(BaseController):
                                 3: self.validate_date}
             new_player_informations = []
             while True:
-                final_input = self.get_user_input(self.handle_information_player_input,
-                                                  method_per_index[index_field])
+                while True:
+                    try:
+                        final_input = self.get_user_input(self.handle_information_player_input,
+                                                      method_per_index[index_field])
+                    except EmptyStringException:
+                        print("test")
+                    else:
+                        break
                 new_player_informations.append(final_input)
                 index_field += 1
                 if index_field == 4:

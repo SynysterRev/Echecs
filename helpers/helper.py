@@ -4,7 +4,10 @@ class Helper:
                  "start_round": "Démarrer un tour", "start_match": "Démarrer un match",
                  "players_menu": "Gérer les joueurs", "add_player": "Ajouter un nouveau joueur",
                  "generate_reports": "Générer les rapports", "quit": "Quitter", "main_menu": "Menu principal",
-                 "match_result": "Résultat du match"}
+                 "match_result": "Résultat du match", "players_report": "Liste des joueurs",
+                 "tournaments_report": "Liste des tournois",
+                 "players_tournament_report": "Liste des joueurs pour un tournoi",
+                 "tournament_flow_report": "Informations à propos d'un tournoi"}
 
     @classmethod
     def get_player_path(cls):

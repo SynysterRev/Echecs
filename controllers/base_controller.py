@@ -1,9 +1,9 @@
 import datetime
 
-from pynput import keyboard
 from blessed import Terminal
+from pynput import keyboard
 
-from custom_exception import OutOfRangeValueException, CustomException
+from custom_exception import OutOfRangeValueException, EmptyStringException
 
 
 class BaseController:
@@ -89,16 +89,17 @@ class BaseController:
         self.view.render(self.current_selection)
 
     def is_input_not_empty(self, user_input):
-        for char in user_input:
-            if char != " ":
-                return True
+        if len(user_input) > 0 and user_input[0] != " ":
+            return True
+        else:
+            raise EmptyStringException()
 
     def is_input_int(self, user_input):
         try:
             int(user_input)
             return True
         except ValueError:
-            return False
+            raise EmptyStringException()
 
     def validate_date(self, date):
         try:
@@ -107,6 +108,7 @@ class BaseController:
         except ValueError:
             return False
 
+    # handle arrow character
     def get_user_input(self, view_func, validate_func, default_input=""):
         term = Terminal()
         user_input = default_input
@@ -117,6 +119,10 @@ class BaseController:
                     if key.name == "KEY_ENTER":
                         if validate_func(user_input):
                             return user_input
+                        else:
+                            pass
+                            # error, raise it or handle it here ?
+                            # add variable in view to change color of current text to display it in red
                     elif key.name == "KEY_BACKSPACE":
                         user_input = user_input[:-1]
                     else:

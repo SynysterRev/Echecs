@@ -106,10 +106,11 @@ class TournamentFlowController(BaseController):
             listener.join()
         if self.current_selection != self.max_selection - 1:
             # get selected tournament and current round and go to the next menu
-            self.current_tournament = self.tournaments[self.current_selection]
-            self.get_encounters_for_players()
-            self.view.current_round_index = self.current_tournament.current_round_index
-            self.current_menu = 2
+            if len(self.tournaments[self.current_selection].players) % 2 == 0:
+                self.current_tournament = self.tournaments[self.current_selection]
+                self.get_encounters_for_players()
+                self.view.current_round_index = self.current_tournament.current_round_index
+                self.current_menu = 2
         else:
             self.current_menu = 0
 
