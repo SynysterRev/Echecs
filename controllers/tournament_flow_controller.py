@@ -27,13 +27,6 @@ class TournamentFlowController(BaseController):
         self.current_menu = 1
         self.current_match = None
 
-    def start_new_round(self):
-        if self.current_tournament is None:
-            raise NoTournamentException()
-
-        current_round = self.current_tournament.rounds[self.current_tournament.current_round_index]
-        current_round.start_round()
-
     def is_match_already_done(self, players_encounters, player_one, player_two):
         if player_one.player_id in players_encounters:
             return any(player_two.player_id == player
@@ -80,10 +73,10 @@ class TournamentFlowController(BaseController):
         while True:
             self.current_selection = 0
             self.view.clear_view()
-            func = test[self.current_menu]
+            function = test[self.current_menu]
             if self.current_menu == 0:
                 return Helper.get_main_menu()
-            func()
+            function()
 
     def save(self):
         Serializer.serialize_tournament(self.current_tournament)
@@ -102,17 +95,22 @@ class TournamentFlowController(BaseController):
     def select_tournament(self):
         self.max_selection = len(self.tournaments) + 1
         self.view.render_tournament_selection(self.current_selection)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
-        if self.current_selection != self.max_selection - 1:
-            # get selected tournament and current round and go to the next menu
-            if len(self.tournaments[self.current_selection].players) % 2 == 0:
-                self.current_tournament = self.tournaments[self.current_selection]
-                self.get_encounters_for_players()
-                self.view.current_round_index = self.current_tournament.current_round_index
-                self.current_menu = 2
-        else:
-            self.current_menu = 0
+        while self.current_tournament is None:
+            with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
+                listener.join()
+            if self.current_selection != self.max_selection - 1:
+                # get selected tournament and current round and go to the next menu
+                if len(self.tournaments[self.current_selection].players) % 2 == 0:
+                    self.current_tournament = self.tournaments[self.current_selection]
+                    self.get_encounters_for_players()
+                    self.view.current_round_index = self.current_tournament.current_round_index
+                    self.current_menu = 2
+                else:
+                    self.view.clear_view()
+                    self.view.render_tournament_selection(self.current_selection, "Le nombre de joueurs n'est pas pair")
+            else:
+                self.current_menu = 0
+                return
 
     def select_round(self):
         # current round and back menu

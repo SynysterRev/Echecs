@@ -21,7 +21,7 @@ class TournamentFlowView(BasicView):
         self.current_match = None
         self.tournament_finals_scores = {}
 
-    def render_tournament_selection(self, current_selection):
+    def render_tournament_selection(self, current_selection, error_to_display=""):
         table = Table.grid(padding=1)
         table.add_column(justify="center")
         for index, tournament in enumerate(self.tournaments):
@@ -32,6 +32,8 @@ class TournamentFlowView(BasicView):
 
             option_text = Text(tournament.name, style=option_style)
             table.add_row(option_text)
+            if error_to_display != "" and index == current_selection:
+                table.add_row(Text(str(error_to_display), style="bold red"))
 
         if len(self.tournaments) == current_selection:
             option_style = "bold white on blue"
