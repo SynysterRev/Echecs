@@ -33,7 +33,7 @@ class PlayerController(BaseController):
 
             index_field = 0
             self.view.clear_view()
-            self.view.render_new_player("")
+            self.view.render_new_player()
             method_per_index = {0: (self.is_player_id_valid, IDException),
                                 1: (self.is_input_not_empty, EmptyStringException),
                                 2: (self.is_input_not_empty, EmptyStringException),
@@ -65,6 +65,9 @@ class PlayerController(BaseController):
                                 new_player_informations[3])
             Serializer.serialize_player(new_player)
             self.players_list.append(new_player)
+            index_field = 0
+            new_player_informations = []
+            self.view.clear_player_informations()
 
     def handle_information_player_input(self):
         self.view.clear_view()
