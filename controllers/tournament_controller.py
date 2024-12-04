@@ -1,6 +1,7 @@
 from pynput import keyboard
 
 from controllers.base_controller import BaseController
+from custom_exception import EmptyStringException
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
 from helpers.serializer import Serializer
@@ -34,31 +35,40 @@ class TournamentController(BaseController):
             self.create_tournament()
 
 
-    def handle_information_tournament_input(self, user_input):
+    def handle_information_tournament_input(self):
         self.view.clear_view()
-        self.view.render_new_tournament(user_input)
+        self.view.render_new_tournament()
 
     def create_tournament(self):
         index_field = 0
         self.view.clear_view()
-        self.view.render_new_tournament("")
-        method_per_index = {0: self.is_input_not_empty,
-                            1: self.is_input_not_empty,
-                            2: self.validate_date,
-                            3: self.is_input_not_empty,
-                            4: self.is_input_int}
+        self.view.render_new_tournament()
+        method_per_index = {0: (self.is_input_not_empty, EmptyStringException),
+                            1: (self.is_input_not_empty, EmptyStringException),
+                            2: (self.validate_date, ValueError),
+                            3: (self.is_input_not_empty, EmptyStringException),
+                            4: (self.is_input_int, ValueError)}
         new_tournament_informations = []
         while True:
             default_input_value = "4" if index_field == 4 else ""
-            final_input = self.get_user_input(self.handle_information_tournament_input,
-                                              method_per_index[index_field], default_input_value)
+            while True:
+                try:
+                    final_input = self.get_user_input(self.handle_information_tournament_input,
+                                              method_per_index[index_field][0], default_input_value)
+                except method_per_index[index_field][1] as exception:
+                    default_input_value = self.view.current_input
+                    self.view.clear_view()
+                    self.view.render_new_tournament(exception)
+                else:
+                    break
+            self.view.current_input = ""
             new_tournament_informations.append(final_input)
             index_field += 1
             if index_field == len(method_per_index):
                 break
             self.view.change_information_input_index(index_field)
             self.view.validate_information(final_input, index_field - 1)
-            self.handle_information_tournament_input("")
+            self.handle_information_tournament_input()
         new_tournament = Tournament(new_tournament_informations[0],
                                     new_tournament_informations[1],
                                     new_tournament_informations[2],
@@ -67,6 +77,10 @@ class TournamentController(BaseController):
                                     new_tournament_informations[4])
         Serializer.serialize_tournament(new_tournament)
         self.tournaments_list.append(new_tournament)
+        self.view.clear_tournament_informations()
+        index_field = 0
+        default_input_value = ""
+        new_tournament_informations = []
 
     # continue it if enough time
     def modify_tournament(self):

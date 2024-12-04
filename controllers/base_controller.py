@@ -57,10 +57,13 @@ class BaseController:
 
     def is_input_int(self, user_input):
         try:
-            int(user_input)
-            return True
+            int_input = int(user_input)
+            if int_input > 0:
+                return True
+            else:
+                raise ValueError()
         except ValueError:
-            raise EmptyStringException()
+            raise ValueError("Veuillez entrer un nombre positif et supérieur à 0")
 
     def validate_date(self, date):
         try:

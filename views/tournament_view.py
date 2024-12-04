@@ -17,6 +17,7 @@ class TournamentView(BasicView):
         self.new_tournament_information = ["Nom : ", "Lieu : ", "Date début : ",
                                            "Description : ", "Nombre de rounds : "]
         self.index_field = 0
+        self.current_input = ""
 
     def render(self, current_selection):
         table = Table(show_lines=True)
@@ -52,11 +53,13 @@ class TournamentView(BasicView):
         panel = Panel(layout, title=panel_title)
         self.console.print(panel)
 
-    def render_new_tournament(self, current_input):
+    def render_new_tournament(self, error_to_display=""):
         table = Table.grid(padding=1)
         table.add_column(justify="center")
         for index, information in enumerate(self.new_tournament_information):
-            table.add_row(self.get_input_display(information, current_input, index == self.index_field))
+            table.add_row(self.get_input_display(information, self.current_input, index == self.index_field))
+            if error_to_display != "" and index == self.index_field:
+                table.add_row(Text(str(error_to_display), style="bold red"))
 
         panel_title = f"[bold magenta]{"Nouveau tournoi"}[/bold magenta]"
         panel = Panel(Align.center(table), title=panel_title)
@@ -65,7 +68,10 @@ class TournamentView(BasicView):
     def get_input_display(self, tournament_information, current_input, is_current_field):
         if is_current_field:
             tournament_information += current_input
-            return Text(f"> {tournament_information}")
+            text = Text("> ", style="blue")
+            text.append(tournament_information)
+            text.append("<", style="blue")
+            return text
         else:
             return Text(tournament_information)
 
@@ -75,3 +81,9 @@ class TournamentView(BasicView):
 
     def change_information_input_index(self, new_field_index):
         self.index_field = new_field_index
+
+    def clear_tournament_informations(self):
+        self.index_field = 0
+        self.current_input = ""
+        self.new_tournament_information = ["Nom : ", "Lieu : ", "Date début : ",
+                                           "Description : ", "Nombre de rounds : "]
