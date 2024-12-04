@@ -3,7 +3,7 @@ import datetime
 from blessed import Terminal
 from pynput import keyboard
 
-from custom_exception import OutOfRangeValueException, EmptyStringException
+from custom_exception import EmptyStringException
 
 
 class BaseController:
@@ -26,45 +26,6 @@ class BaseController:
         with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
             listener.join()
         return self.accessible_menus[self.current_selection]
-
-    def get_user_choice(self, method_to_call) -> int:
-        while True:
-            try:
-                choice = method_to_call()
-            except ValueError:
-                self.view.show_type_int_error()
-            except OutOfRangeValueException as exception:
-                self.view.show_custom_error(exception)
-            else:
-                return choice
-
-    def get_date_from_user(self, view_method, message_to_display):
-        while True:
-            try:
-                date = view_method(message_to_display)
-            except ValueError:
-                self.view.show_custom_error("La date n'est pas au format jj/mm/aaaa")
-            else:
-                break
-        return date.strftime("%d/%m/%Y")
-
-    def get_string_from_user(self, message_to_display):
-        while True:
-            try:
-                user_string = self.view.ask_for_string(message_to_display)
-            except ValueError:
-                self.view.show_type_string_error()
-            else:
-                return user_string
-
-    def get_int_from_user(self, message_to_display):
-        while True:
-            try:
-                user_int = self.view.ask_for_int(message_to_display)
-            except ValueError:
-                self.view.show_type_int_error()
-            else:
-                return user_int
 
     def handle_input(self, key):
         """Handle user input
@@ -103,10 +64,10 @@ class BaseController:
 
     def validate_date(self, date):
         try:
-            datetime.datetime.strptime(date, "%d/%m/%Y")
-            return True
+            is_date = bool(datetime.datetime.strptime(date, "%d/%m/%Y"))
+            return is_date
         except ValueError:
-            return False
+            raise ValueError("La date doit être au format JJ/MM/AAAA")
 
     # handle arrow character
     def get_user_input(self, view_func, validate_func, default_input=""):
@@ -119,12 +80,9 @@ class BaseController:
                     if key.name == "KEY_ENTER":
                         if validate_func(user_input):
                             return user_input
-                        else:
-                            pass
-                            # error, raise it or handle it here ?
-                            # add variable in view to change color of current text to display it in red
                     elif key.name == "KEY_BACKSPACE":
                         user_input = user_input[:-1]
                     else:
                         user_input += key
-                    view_func(user_input)
+                    self.view.current_input = user_input
+                    view_func()

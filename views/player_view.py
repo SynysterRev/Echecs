@@ -14,8 +14,9 @@ class PlayerView(BasicView):
         super().__init__(console)
         self.name = "Joueurs enregistrés"
         self.players_list = []
-        self.new_player_informations = ["ID joueur : ", "Nom : ", "Prénom : ", "Date de naissance : "]
+        self.new_player_informations = ["ID joueur : ", "Nom : ", "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
         self.index_field = 0
+        self.current_input = ""
 
     def render(self, current_selection):
         table = Table(show_lines=True)
@@ -42,11 +43,13 @@ class PlayerView(BasicView):
         panel = Panel(layout, title=panel_title)
         self.console.print(panel)
 
-    def render_new_player(self, current_input):
+    def render_new_player(self, error_to_display=""):
         table = Table.grid(padding=1)
         table.add_column(justify="center")
         for index, information in enumerate(self.new_player_informations):
-            table.add_row(self.get_input_display(information, current_input, index == self.index_field))
+            table.add_row(self.get_input_display(information, self.current_input, index == self.index_field))
+            if error_to_display != "" and index == self.index_field:
+                table.add_row(Text(str(error_to_display), style="bold red"))
 
         panel_title = f"[bold magenta]{"Nouveau joueur"}[/bold magenta]"
         panel = Panel(Align.center(table), title=panel_title)
@@ -55,7 +58,10 @@ class PlayerView(BasicView):
     def get_input_display(self, player_information, current_input, is_current_field):
         if is_current_field:
             player_information += current_input
-            return Text(f">{player_information}")
+            text = Text("> ", style="blue")
+            text.append(player_information, style="default")
+            text.append("<", style="blue")
+            return text
         else:
             return Text(player_information)
 
