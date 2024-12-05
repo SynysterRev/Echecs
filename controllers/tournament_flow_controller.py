@@ -1,4 +1,5 @@
 import random
+import copy
 
 from pynput import keyboard
 
@@ -11,6 +12,7 @@ from models.round import Round
 
 
 class TournamentFlowController(BaseController):
+
     def __init__(self, view):
         super().__init__(view)
         self.players_encounters = {}
@@ -27,31 +29,53 @@ class TournamentFlowController(BaseController):
         self.current_menu = 1
         self.current_match = None
 
-    def is_match_already_done(self, players_encounters, player_one, player_two):
-        if player_one.player_id in players_encounters:
-            return any(player_two.player_id == player
-                       for player in players_encounters[player_one.player_id])
-        return False
-    # revoir algo
-    def get_best_match(self, players_encounters, current_player, all_players):
-        for player in all_players[1:]:
-            if not self.is_match_already_done(players_encounters, current_player[0], player[0]):
-                players_encounters[current_player[0].player_id].append(player[0].player_id)
-                players_encounters[player[0].player_id].append(current_player[0].player_id)
-                return Match(current_player, player)
+    def check_previous_matches(self, current_player, all_matches, players_left):
+        """check if we can pair current player with a player already paired
+        check by reversed to keep score between players close"""
+
+        for match in reversed(all_matches):
+            player_one = match.get_player_one()
+            player_two = match.get_player_two()
+            if (len(self.players_encounters) == 0 or
+                    current_player.player_id in self.players_encounters):
+                if player_two.player_id not in self.players_encounters[current_player.player_id]:
+                    all_matches.remove(match)
+                    new_match = Match([player_two, 0], [current_player, 0])
+                    all_matches.append(new_match)
+                    players_left.append(player_one)
+                    return new_match
+                if player_one.player_id not in self.players_encounters[current_player.player_id]:
+                    all_matches.remove(match)
+                    new_match = Match([player_one, 0], [current_player, 0])
+                    all_matches.append(new_match)
+                    players_left.append(player_two)
+                    return new_match
+        return None
 
     def create_matches(self):
         players_points = self.current_tournament.points
-        players_points = sorted(players_points.items(), key=lambda item: item[1], reverse=True)
-        current_player = players_points[0]
+        players_list = sorted(players_points, key=players_points.get, reverse=True)
+        players_left = copy.deepcopy(players_list)
         new_matches = []
-        while len(players_points) > 0:
-            new_match = self.get_best_match(self.players_encounters, current_player, players_points)
-            players_points.remove(new_match.players_score[0])
-            players_points.remove(new_match.players_score[1])
-            new_matches.append(new_match)
-            if len(players_points) > 0:
-                current_player = players_points[0]
+        while len(players_left) > 0:
+            current_player = players_left[0]
+            players_left.remove(current_player)
+            new_match = None
+            for player in players_left:
+                if (len(self.players_encounters) == 0 or
+                        player.player_id not in self.players_encounters[current_player.player_id]):
+                    new_match = Match([current_player, 0], [player, 0])
+                    new_matches.append(new_match)
+                    players_left.remove(player)
+                    break
+            # no pairing found between players left
+            if new_match is None:
+                new_match = self.check_previous_matches(current_player, new_matches, players_left)
+                # all pairing are already done, start over
+                if new_match is None:
+                    self.players_encounters.clear()
+                    new_matches.clear()
+                    players_left = copy.deepcopy(players_list)
         return new_matches
 
     def start_round(self):
@@ -65,21 +89,23 @@ class TournamentFlowController(BaseController):
         self.save()
 
     def run(self):
-        self.tournaments = Deserializer.deserialize_tournament()
+        self.tournaments = [tournament for tournament in Deserializer.deserialize_tournament() if
+                            not tournament.is_finished]
         self.view.tournaments = self.tournaments
-        test = {0: None, 1: self.select_tournament, 2: self.select_round,
+        available_menus = {0: None, 1: self.select_tournament, 2: self.select_round,
                 3: self.select_match, 4: self.select_match_result,
                 5: self.tournament_over}
         while True:
             self.current_selection = 0
             self.view.clear_view()
-            function = test[self.current_menu]
+            function = available_menus[self.current_menu]
             if self.current_menu == 0:
                 return Helper.get_main_menu()
             function()
 
     def save(self):
-        Serializer.serialize_tournament(self.current_tournament)
+        if self.current_tournament is not None:
+            Serializer.serialize_tournament(self.current_tournament)
 
     def get_encounters_for_players(self):
         self.players = self.current_tournament.players
@@ -127,6 +153,7 @@ class TournamentFlowController(BaseController):
             listener.join()
         if self.current_selection == 1:
             self.current_menu = 1
+            self.current_tournament = None
         else:
             if not round_started:
                 self.start_round()
@@ -195,12 +222,13 @@ class TournamentFlowController(BaseController):
         # Ok
         self.max_selection = 1
         self.current_tournament.points = dict(sorted(self.current_tournament.points.items(), key=lambda item: item[1],
-                                                 reverse=True))
+                                                     reverse=True))
         self.view.tournament_finals_scores = self.current_tournament.points
         self.view.render_end_tournament(self.current_selection)
         with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
             listener.join()
-
+        self.current_tournament.end_tournament()
+        self.save()
         self.current_menu = 0
 
     def render_view(self):
