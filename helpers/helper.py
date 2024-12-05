@@ -6,8 +6,8 @@ class Helper:
                  "generate_reports": "Générer les rapports", "quit": "Quitter", "main_menu": "Menu principal",
                  "match_result": "Résultat du match", "players_report": "Liste des joueurs",
                  "tournaments_report": "Liste des tournois",
-                 "players_tournament_report": "Liste des joueurs pour un tournoi",
-                 "tournament_flow_report": "Informations à propos d'un tournoi"}
+                 "tournament_players_report": "Liste des joueurs pour un tournoi",
+                 "tournament_rounds_report": "Tours d'un tournoi"}
 
     @classmethod
     def get_player_path(cls):
@@ -64,3 +64,19 @@ class Helper:
     @staticmethod
     def get_match_result_menu():
         return "match_result"
+
+    @staticmethod
+    def get_players_report_menu():
+        return "players_report"
+
+    @staticmethod
+    def get_tournaments_report_menu():
+        return "tournaments_report"
+
+    @staticmethod
+    def get_tournament_players_report_menu():
+        return "tournament_players_report"
+
+    @staticmethod
+    def get_tournament_rounds_report_menu():
+        return "tournament_rounds_report"

@@ -10,12 +10,14 @@ class ReportController(BaseController):
         super().__init__(view)
         self.players_list = []
         self.tournaments_list = []
-        self.accessible_menus = ("players_report", "tournaments_report",
-                                 "players_tournament_report", "tournament_flow_report",
+        self.accessible_menus = (Helper.get_players_report_menu(),
+                                 Helper.get_tournaments_report_menu(),
+                                 Helper.get_tournament_players_report_menu(),
+                                 Helper.get_tournament_rounds_report_menu(),
                                  Helper.get_main_menu())
         self.view_to_display = {-1: self.view.render_menu, 0: self.view.render_all_players,
                                 1: self.view.render_all_tournaments, 2: self.view.render_tournament_players,
-                                3: self.view.render_tournament_info}
+                                3: self.view.render_tournament_info, 4: self.view.render_tournaments_names}
         self.index_menu = -1
         self.selected_tournament = None
 
@@ -48,6 +50,7 @@ class ReportController(BaseController):
         self.view_to_display[self.index_menu](self.current_selection)
 
     def select_tournament(self):
+        self.index_menu = 4
         index_menu = self.current_selection
         self.current_selection = 0
         self.view.clear_view()
