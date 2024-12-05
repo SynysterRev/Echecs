@@ -122,8 +122,8 @@ class ReportView(BasicView):
 
     def render_tournament_info(self, current_selection):
         table = Table(show_lines=True)
-        table.add_column("Tours", justify="center")
-        table.add_column("Matchs", justify="center")
+        table.add_column("Tours", justify="center", vertical="middle")
+        table.add_column("Matchs", justify="center", vertical="middle")
 
         for round in self.selected_tournament.rounds:
             row = [round.name]
