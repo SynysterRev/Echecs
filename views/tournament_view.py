@@ -87,7 +87,7 @@ class TournamentView(BasicView):
         self.new_tournament_information = ["Nom : ", "Lieu : ", "Date début : ",
                                            "Description : ", "Nombre de rounds : "]
 
-    def render_players_to_add(self, current_selection):
+    def render_players_to_add(self, current_selection, error_to_display=""):
         table = Table(show_lines=True)
         table.add_column("ID", justify="center")
         table.add_column("Prénom", justify="center")
@@ -103,7 +103,9 @@ class TournamentView(BasicView):
         padded_menu_options = self.get_menu_options(current_selection)
 
         panel_title = f"[bold magenta]{self.name}[/bold magenta]"
+        error = Text(str(error_to_display), style="bold red") if error_to_display != "" else ""
         layout = Group(Align.center(padded_table),
+                       Align.center(error),
                        Align.center(padded_menu_options))
         panel = Panel(layout, title=panel_title)
         self.console.print(panel)

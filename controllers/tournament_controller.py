@@ -98,10 +98,12 @@ class TournamentController(BaseController):
         self.current_selection = 0
         self.view.players_list = self.wanted_players
         self.max_selection = len(self.view.accessible_menus)
+        possible_error = ""
         while True:
             self.view.clear_view()
             # display array with all selected players
-            self.view.render_players_to_add(self.current_selection)
+            self.view.render_players_to_add(self.current_selection, possible_error)
+            possible_error = ""
             self.handle_input()
             if self.current_selection == 0:
                 if not players_imported:
@@ -116,6 +118,13 @@ class TournamentController(BaseController):
             elif self.current_selection == 2:
                 self.wanted_players.append(self.add_new_player())
             elif self.current_selection == 3:
+                number_players = len(self.wanted_players)
+                if number_players % 2 != 0:
+                    possible_error = "Le nombre de joueurs doit être pair"
+                    continue
+                if number_players <= 0:
+                    possible_error = "Aucun joueur n'a été sélectionné"
+                    continue
                 break
         self.accessible_menus = (Helper.get_new_tournament_menu(),
                                  # Helper.get_modify_tournament_menu(),

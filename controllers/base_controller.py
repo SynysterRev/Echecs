@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from blessed import Terminal
 
@@ -41,13 +41,6 @@ class BaseController:
                     elif key.name == "KEY_DOWN":
                         self.move_down()
 
-        # if key == keyboard.Key.up:
-        #     self.move_up()
-        # if key == keyboard.Key.down:
-        #     self.move_down()
-        # if key == keyboard.Key.enter:
-        #     return False
-
     def move_up(self):
         self.current_selection = (self.current_selection - 1) % self.max_selection
         self.render_view()
@@ -78,7 +71,7 @@ class BaseController:
 
     def validate_date(self, date):
         try:
-            is_date = bool(datetime.datetime.strptime(date, "%d/%m/%Y"))
+            is_date = bool(datetime.strptime(date, "%d/%m/%Y"))
             return is_date
         except ValueError:
             raise ValueError("La date doit être au format JJ/MM/AAAA")
@@ -97,6 +90,7 @@ class BaseController:
                         user_input = user_input[:-1]
                         self.view.current_input = user_input
                         view_func()
+                    # avoid special key like arrow or F1 to be counted
                     elif key.name is None:
                         user_input += key
                         self.view.current_input = user_input
