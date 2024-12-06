@@ -71,7 +71,7 @@ class Tournament:
         for rnd in self.rounds:
             rounds_list.append(rnd.serialize())
         return {"name": self.name, "place": self.place, "date_start": self.date_start, "date_end":
-            self.date_end, "players": players_list, "description": self.description,
+                self.date_end, "players": players_list, "description": self.description,
                 "number_rounds": self.number_rounds, "current_round_index": self.current_round_index,
                 "rounds": rounds_list, "is_finished": self.is_finished}
 

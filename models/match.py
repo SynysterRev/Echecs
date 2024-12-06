@@ -63,6 +63,6 @@ class Match:
 
     def serialize(self):
         return {"player_one": (self.players_score[0][0].serialize(), self.players_score[0][1]),
-                "player_two":(self.players_score[1][0].serialize(), self.players_score[1][1]),
+                "player_two": (self.players_score[1][0].serialize(), self.players_score[1][1]),
                 "winner": self.winner,
                 "is_finished": self.is_finished}

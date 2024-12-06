@@ -15,8 +15,7 @@ class Player:
 
     def serialize(self):
         return {"player_id": self.player_id, "name": self.name, "first_name": self.first_name, "birth_date":
-            self.birth_date}
+                self.birth_date}
 
     def __str__(self):
         return f"{self.first_name} {self.name} (ID : {self.player_id})"
-

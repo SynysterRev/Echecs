@@ -1,5 +1,5 @@
-import random
 import copy
+import random
 
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
@@ -91,8 +91,8 @@ class TournamentFlowController(BaseController):
                             not tournament.is_finished]
         self.view.tournaments = self.tournaments
         available_menus = {0: None, 1: self.select_tournament, 2: self.select_round,
-                3: self.select_match, 4: self.select_match_result,
-                5: self.tournament_over}
+                           3: self.select_match, 4: self.select_match_result,
+                           5: self.tournament_over}
         while True:
             self.current_selection = 0
             self.view.clear_view()
@@ -130,7 +130,8 @@ class TournamentFlowController(BaseController):
                     self.current_menu = 2
                 else:
                     self.view.clear_view()
-                    self.view.render_tournament_selection(self.current_selection, "Le nombre de joueurs n'est pas pair")
+                    self.view.render_tournament_selection(self.current_selection,
+                                                          "Le nombre de joueurs n'est pas pair")
             else:
                 self.current_menu = 0
                 return

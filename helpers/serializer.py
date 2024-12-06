@@ -17,7 +17,7 @@ class Serializer:
                     pass
         file_data.append(player.serialize())
         with open(file_path, "w+") as file:
-            json.dump(file_data, file, indent=4, separators=(',',': '))
+            json.dump(file_data, file, indent=4, separators=(',', ': '))
 
     @staticmethod
     def serialize_tournament(tournament):
@@ -31,5 +31,4 @@ class Serializer:
             print(f"Une erreur s'est produite : {e}")
             return
         with open(file_path, "w") as file:
-            json.dump(tournament.serialize(), file, indent=4, separators=(',',': '))
-
+            json.dump(tournament.serialize(), file, indent=4, separators=(',', ': '))

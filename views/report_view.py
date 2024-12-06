@@ -47,7 +47,7 @@ class ReportView(BasicView):
 
         panel_option = self.get_menu_options(current_selection)
 
-        panel_title = f"[bold magenta]Joueurs[/bold magenta]"
+        panel_title = "[bold magenta]Joueurs[/bold magenta]"
         layout = Group(Align.center(padded_table),
                        Align.center(panel_option))
         panel = Panel(layout, title=panel_title)
@@ -77,7 +77,7 @@ class ReportView(BasicView):
 
         panel_option = self.get_menu_options(current_selection)
 
-        panel_title = f"[bold magenta]Tournois[/bold magenta]"
+        panel_title = "[bold magenta]Tournois[/bold magenta]"
         layout = Group(Align.center(padded_table),
                        Align.center(panel_option))
         panel = Panel(layout, title=panel_title)
@@ -93,7 +93,7 @@ class ReportView(BasicView):
                 option_style = "white"
             option_text = Text(tournament.name, style=option_style)
             table.add_row(option_text)
-        panel_title = f"[bold magenta]Sélection tournoi[/bold magenta]"
+        panel_title = "[bold magenta]Sélection tournoi[/bold magenta]"
         table = Padding(table, (1, 0, 1, 0))
         self.console.print(Panel(Align.center(table), title=panel_title))
 

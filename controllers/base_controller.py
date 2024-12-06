@@ -4,6 +4,7 @@ from blessed import Terminal
 
 from custom_exception import EmptyStringException
 
+
 class BaseController:
     def __init__(self, view):
         """Base controller

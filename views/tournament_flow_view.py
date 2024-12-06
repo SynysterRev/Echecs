@@ -56,7 +56,7 @@ class TournamentFlowView(BasicView):
         else:
             option_style = "white"
 
-        option_text = Text(f"Commencer le round", style=option_style)
+        option_text = Text("Commencer le round", style=option_style)
         table.add_row(Align.center(option_text))
 
         if current_selection == 1:
@@ -163,7 +163,6 @@ class TournamentFlowView(BasicView):
             option_text = Text(str(option), style=option_style)
             table.add_row(option_text)
 
-
         panel_title = f"[bold magenta]{"Résultat"}[/bold magenta]"
         table = Padding(table, (1, 0, 1, 0))
         panel = Panel(Align.center(table), title=panel_title)
@@ -174,7 +173,7 @@ class TournamentFlowView(BasicView):
         table_result.add_column("Joueur", justify="center")
         table_result.add_column("Résultat", justify="center")
 
-        for player,score in self.tournament_finals_scores.items():
+        for player, score in self.tournament_finals_scores.items():
             table_result.add_row(str(player), str(score))
 
         if current_selection == 0:

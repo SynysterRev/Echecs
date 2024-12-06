@@ -2,6 +2,7 @@ from models.match import Match
 from datetime import datetime
 from typing import List
 
+
 class Round:
     def __init__(self, name, matches: List[Match]):
         """Construct a round
@@ -28,10 +29,10 @@ class Round:
     def is_started(self):
         return False if not self.date_begin else True
 
-    def get_number_matches(self) -> int :
+    def get_number_matches(self) -> int:
         return len(self.matches)
 
-    def get_number_matches_not_played(self) -> int :
+    def get_number_matches_not_played(self) -> int:
         return sum(not match.is_finished for match in self.matches)
 
     def get_matches_not_played(self):
@@ -56,4 +57,5 @@ class Round:
         matches_list = []
         for match in self.matches:
             matches_list.append(match.serialize())
-        return {"name": self.name, "matches": matches_list, "is_finished": self.is_finished, "date_begin": self.date_begin, "date_end": self.date_end}
+        return {"name": self.name, "matches": matches_list, "is_finished": self.is_finished,
+                "date_begin": self.date_begin, "date_end": self.date_end}

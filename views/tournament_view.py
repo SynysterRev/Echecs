@@ -18,7 +18,8 @@ class TournamentView(BasicView):
                                            "Description : ", "Nombre de rounds : "]
         self.index_field = 0
         self.current_input = ""
-        self.new_player_informations = ["ID joueur : ", "Nom : ", "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
+        self.new_player_informations = ["ID joueur : ", "Nom : ",
+                                        "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
         self.players_list = []
 
     def render(self, current_selection):
@@ -34,7 +35,7 @@ class TournamentView(BasicView):
         for tournament in self.tournaments:
             id_list = ""
             for index, player in enumerate(tournament.players):
-                if index != 0 and index % 4 == 0 :
+                if index != 0 and index % 4 == 0:
                     id_list += "\n"
                 id_list += f"{player.player_id}, " if index < len(tournament.players) - 1 else f"{player.player_id}"
             row = [tournament.name, tournament.place, tournament.date_start, tournament.date_end,
@@ -137,16 +138,18 @@ class TournamentView(BasicView):
     def clear_player_informations(self):
         self.index_field = 0
         self.current_input = ""
-        self.new_player_informations = ["ID joueur : ", "Nom : ", "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
+        self.new_player_informations = ["ID joueur : ", "Nom : ",
+                                        "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
 
     def render_selection_player(self, error_to_display=""):
         search = Table.grid(padding=1)
         search.add_column(justify="center")
-        search.add_row(self.get_input_display("ID du joueur (entrée pour valider): ", self.current_input, True))
+        search.add_row(self.get_input_display("ID du joueur (entrée pour valider): ",
+                                              self.current_input, True))
         if error_to_display != "":
             search.add_row(Text(str(error_to_display), style="bold red"))
 
-        panel_title = f"[bold magenta]Sélection de joueur[/bold magenta]"
+        panel_title = "[bold magenta]Sélection de joueur[/bold magenta]"
         search = Padding(search, (1, 0, 1, 0))
         panel = Panel(Align.center(search), title=panel_title)
         self.console.print(panel)

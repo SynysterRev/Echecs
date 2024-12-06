@@ -39,7 +39,6 @@ class TournamentController(BaseController):
 
             self.create_tournament()
 
-
     def handle_information_tournament_input(self):
         self.view.clear_view()
         self.view.render_new_tournament()
@@ -59,7 +58,7 @@ class TournamentController(BaseController):
             while True:
                 try:
                     final_input = self.get_user_input(self.handle_information_tournament_input,
-                                              method_per_index[index_field][0], default_input_value)
+                                                      method_per_index[index_field][0], default_input_value)
                 except method_per_index[index_field][1] as exception:
                     default_input_value = self.view.current_input
                     self.view.clear_view()
@@ -75,7 +74,6 @@ class TournamentController(BaseController):
             self.view.validate_information(final_input, index_field - 1)
             self.handle_information_tournament_input()
         self.ask_for_players()
-        #ask for players
         new_tournament = Tournament(new_tournament_informations[0],
                                     new_tournament_informations[1],
                                     new_tournament_informations[2],
@@ -117,7 +115,7 @@ class TournamentController(BaseController):
                 self.max_selection = len(self.view.accessible_menus)
             elif self.current_selection == 2:
                 self.wanted_players.append(self.add_new_player())
-            elif self.current_selection ==3:
+            elif self.current_selection == 3:
                 break
         self.accessible_menus = (Helper.get_new_tournament_menu(),
                                  # Helper.get_modify_tournament_menu(),
@@ -133,7 +131,7 @@ class TournamentController(BaseController):
         while True:
             try:
                 player_id = self.get_user_input(self.handle_player_selection_input,
-                                          self.does_player_id_exist, default_input_value)
+                                                self.does_player_id_exist, default_input_value)
             except IDException as exception:
                 default_input_value = self.view.current_input
                 self.view.clear_view()
@@ -154,7 +152,6 @@ class TournamentController(BaseController):
             return self.searched_player
         else:
             return self.selection_players()
-
 
     def add_new_player(self):
         index_field = 0
@@ -230,10 +227,10 @@ class TournamentController(BaseController):
             self.view.render_validate_player(searched_player_name, self.current_selection)
 
     # continue it if enough time
-    def modify_tournament(self):
-        tournaments = Deserializer.deserialize_tournament()
-        self.view.display_all_tournaments(tournaments)
-        choice = self.view.ask_tournament_to_modify(len(tournaments))
+    # def modify_tournament(self):
+    #     tournaments = Deserializer.deserialize_tournament()
+    #     self.view.display_all_tournaments(tournaments)
+    #     choice = self.view.ask_tournament_to_modify(len(tournaments))
         # players = tournament.players
         # players_encounters = {}
         # if self.current_tournament.current_round == 1:

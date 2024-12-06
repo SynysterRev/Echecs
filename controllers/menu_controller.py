@@ -10,4 +10,3 @@ class MenuController(BaseController):
                                  Helper.get_players_menu(),
                                  Helper.get_generate_reports_menu(),
                                  Helper.get_quit())
-

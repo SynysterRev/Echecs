@@ -7,6 +7,7 @@ from rich.text import Text
 
 from views.basic_view import BasicView
 
+
 class PlayerView(BasicView):
     """Menu where user can add new players to the database"""
 
@@ -14,7 +15,8 @@ class PlayerView(BasicView):
         super().__init__(console)
         self.name = "Joueurs enregistrés"
         self.players_list = []
-        self.new_player_informations = ["ID joueur : ", "Nom : ", "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
+        self.new_player_informations = ["ID joueur : ", "Nom : ",
+                                        "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
         self.index_field = 0
         self.current_input = ""
 
@@ -75,4 +77,5 @@ class PlayerView(BasicView):
     def clear_player_informations(self):
         self.index_field = 0
         self.current_input = ""
-        self.new_player_informations = ["ID joueur : ", "Nom : ", "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
+        self.new_player_informations = ["ID joueur : ", "Nom : ",
+                                        "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
