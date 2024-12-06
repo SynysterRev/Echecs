@@ -7,7 +7,9 @@ class Helper:
                  "match_result": "Résultat du match", "players_report": "Liste des joueurs",
                  "tournaments_report": "Liste des tournois",
                  "tournament_players_report": "Liste des joueurs pour un tournoi",
-                 "tournament_rounds_report": "Tours d'un tournoi"}
+                 "tournament_rounds_report": "Tours d'un tournoi",
+                 "import_players": "Importer tous les joueurs", "back": "Retour",
+                 "select_players": "Sélectionner des joueurs", "validate": "Valider"}
 
     @classmethod
     def get_player_path(cls):
@@ -80,3 +82,19 @@ class Helper:
     @staticmethod
     def get_tournament_rounds_report_menu():
         return "tournament_rounds_report"
+
+    @staticmethod
+    def get_import_players_menu():
+        return "import_players"
+
+    @staticmethod
+    def get_select_players_menu():
+        return "select_players"
+
+    @staticmethod
+    def get_validate():
+        return "validate"
+
+    @staticmethod
+    def get_back():
+        return "back"
