@@ -5,7 +5,6 @@ from pynput import keyboard
 
 from custom_exception import EmptyStringException
 
-
 class BaseController:
     def __init__(self, view):
         """Base controller
@@ -85,7 +84,9 @@ class BaseController:
                             return user_input
                     elif key.name == "KEY_BACKSPACE":
                         user_input = user_input[:-1]
-                    else:
+                        self.view.current_input = user_input
+                        view_func()
+                    elif key.name is None:
                         user_input += key
-                    self.view.current_input = user_input
-                    view_func()
+                        self.view.current_input = user_input
+                        view_func()
