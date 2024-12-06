@@ -7,7 +7,7 @@ class EmptyStringException(Exception):
 
 
 class IDException(Exception):
-    """User enter incorrect value"""
+    """User enter incorrect ID"""
 
     def __init__(self, message):
         message = message

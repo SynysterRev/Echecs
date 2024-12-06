@@ -21,9 +21,10 @@ class BasicView:
 
     def clear_view(self):
         self.console.clear()
-        # self.cls()
 
     def get_table_menu(self, current_selection):
+        """Return a table with all accessible menus, current selected is highlighted in blue"""
+
         table = Table.grid(padding=1)
         table.add_column(justify="center")
         for index, menu in enumerate(self.accessible_menus):
@@ -35,3 +36,11 @@ class BasicView:
             option_text = Text(Helper.text_menu[menu], style=option_style)
             table.add_row(option_text)
         return table
+
+    def get_menu_options(self, current_selection):
+        menu_options = Align.center(self.get_table_menu(current_selection))
+        panel_menu_options = Panel(menu_options, title="Menu options",
+                                   border_style="blue", padding=(1, 1),
+                                   expand=False)
+        padded_menu_options = Padding(panel_menu_options, 1)
+        return padded_menu_options

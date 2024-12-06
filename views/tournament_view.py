@@ -44,11 +44,7 @@ class TournamentView(BasicView):
 
         padded_table = Padding(table, (1, 0, 0, 0))
 
-        menu_options = Align.center(self.get_table_menu(current_selection))
-        panel_menu_options = Panel(menu_options, title="Menu options",
-                                   border_style="blue", padding=(1, 1),
-                                   expand=False)
-        padded_menu_options = Padding(panel_menu_options, 1)
+        padded_menu_options = self.get_menu_options(current_selection)
 
         panel_title = f"[bold magenta]{self.name}[/bold magenta]"
         layout = Group(Align.center(padded_table),
@@ -104,11 +100,7 @@ class TournamentView(BasicView):
 
         padded_table = Padding(table, (1, 0, 0, 0))
 
-        menu_options = Align.center(self.get_table_menu(current_selection))
-        panel_menu_options = Panel(menu_options, title="Menu options",
-                                   border_style="blue", padding=(1, 1),
-                                   expand=False)
-        padded_menu_options = Padding(panel_menu_options, 1)
+        padded_menu_options = self.get_menu_options(current_selection)
 
         panel_title = f"[bold magenta]{self.name}[/bold magenta]"
         layout = Group(Align.center(padded_table),
@@ -162,11 +154,7 @@ class TournamentView(BasicView):
 
         padded_table = Padding(search, (1, 0, 0, 0))
 
-        menu_options = Align.center(self.get_table_menu(current_selection))
-        panel_menu_options = Panel(menu_options, title="Menu options",
-                                   border_style="blue", padding=(1, 0),
-                                   expand=False)
-        padded_menu_options = Padding(panel_menu_options, 1)
+        padded_menu_options = self.get_menu_options(current_selection)
 
         panel_title = f"[bold magenta]{self.name}[/bold magenta]"
         layout = Group(Align.center(padded_table),

@@ -35,21 +35,6 @@ class Tournament:
         self.date_end = now.strftime("%d/%m/%Y %H:%M:%S")
         self.is_finished = True
 
-    def change_round(self, new_round):
-        self.current_round_index = new_round
-
-    def modify_description(self, new_description):
-        self.description = new_description
-
-    def add_player(self, new_player):
-        self.players.append(new_player)
-
-    def change_date_start(self, new_date):
-        self.date_start = new_date
-
-    def add_round(self, new_round):
-        self.rounds.append(new_round)
-
     def get_score(self, player):
         return self.points[player]
 
@@ -94,13 +79,6 @@ class Tournament:
         for registered_round in data["rounds"]:
             rnd = Round.deserialize(registered_round)
             rounds.append(rnd)
-            # for registered_match in registered_round["matches"]:
-            #     player_one = [registered_match["players_score"][0][0], registered_match["players_score"][0][1]]
-            #     player_two = [registered_match["players_score"][1][0], registered_match["players_score"][1][1]]
-            #     match = Match(player_one, player_two)
-            #     list_matches.append(match)
-            # rnd = Round(registered_round["name"], list_matches)
-            # rounds.append(rnd)
         rounds = rounds
         is_finished = data["is_finished"]
 
