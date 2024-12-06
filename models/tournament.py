@@ -26,9 +26,9 @@ class Tournament:
         self.rounds = []
         self.date_end = ""
         self.is_finished = False
-        self.points = {}
+        self.players_points = {}
         for player in self.players:
-            self.points[player] = 0
+            self.players_points[player] = 0
 
     def end_tournament(self):
         now = datetime.now()
@@ -36,12 +36,13 @@ class Tournament:
         self.is_finished = True
 
     def get_score(self, player):
-        return self.points[player]
+        if player in self.players_points:
+            return self.players_points[player]
 
     def increase_score(self, player, points):
-        for point in self.points:
-            if point.player_id == player.player_id:
-                self.points[point] += points
+        for current_player in self.players_points:
+            if current_player.player_id == player.player_id:
+                self.players_points[current_player] += points
 
     def are_all_rounds_over(self) -> bool:
         return self.current_round_index > self.number_rounds

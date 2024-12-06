@@ -124,21 +124,39 @@ class ReportView(BasicView):
         table = Table(show_lines=True)
         table.add_column("Tours", justify="center", vertical="middle")
         table.add_column("Matchs", justify="center", vertical="middle")
+        table.add_column("Vainqueur", justify="center", vertical="middle")
 
         for round in self.selected_tournament.rounds:
             row = [round.name]
             all_matches = ""
-            for match in round.matches:
-                all_matches += f"{str(match)}\n\n"
+            winners = ""
+            for index, match in enumerate(round.matches):
+                all_matches += str(match)
+                winners += match.winner
+                if index != len(round.matches) - 1:
+                    all_matches += "\n\n"
+                    winners += "\n\n"
             row.append(all_matches)
+            row.append(winners)
             table.add_row(*row)
 
         padded_table = Padding(table, (1, 0, 0, 0))
 
         panel_option = self.get_menu_options(current_selection)
 
+        table_result = Table(show_lines=True)
+        table_result.add_column("Joueur", justify="center")
+        table_result.add_column("Résultat", justify="center")
+
+        sorted_points = dict(sorted(self.selected_tournament.points.items(), key=lambda item: item[1],
+                    reverse=True))
+        for player, score in sorted_points.items():
+            table_result.add_row(str(player), str(score))
+        padded_table_result = Padding(table_result, (1, 0, 0, 0))
+
         panel_title = f"[bold magenta]Informations tournoi {self.selected_tournament.name}[/bold magenta]"
         layout = Group(Align.center(padded_table),
+                       Align.center(padded_table_result),
                        Align.center(panel_option))
         panel = Panel(layout, title=panel_title)
         self.console.print(panel)
