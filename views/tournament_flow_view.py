@@ -1,4 +1,10 @@
-from custom_exception import OutOfRangeValueException
+from rich.align import Align
+from rich.console import Group
+from rich.padding import Padding
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
+
 from helpers.helper import Helper
 from views.basic_view import BasicView
 
@@ -8,50 +14,188 @@ class TournamentFlowView(BasicView):
         """Menu where user can play a tournament"""
         super().__init__(console)
         self.name = "Tournoi"
-        self.tournaments = {}
-        self.current_round = None
-        self.matches = {}
+        self.tournaments = []
+        self.current_round_index = None
+        self.matches = []
+        self.matches_not_played = []
         self.current_match = None
+        self.tournament_finals_scores = {}
 
-    def tournament_selection(self):
-        print("\nTournois enregistrés :")
-        print("--------------------------")
-        for i in range(len(self.tournaments)):
-            print(f"{i + 1}. Tournoi : {self.tournaments[i].name}")
-        print(f"{len(self.tournaments) + 1}. {Helper.text_menu[Helper.get_main_menu()]}")
-        return self.ask_for_user_choice(2, "Tapez le numéro correspondant au tournoi :")
+    def render_tournament_selection(self, current_selection, error_to_display=""):
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        for index, tournament in enumerate(self.tournaments):
+            if index == current_selection:
+                option_style = "bold white on blue"
+            else:
+                option_style = "white"
 
-    # def tournament_selection(self):
-    #     self.display_all_tournaments()
-    #     return self.ask_for_user_choice(2, "Tapez le numéro correspondant au tournoi :")
+            option_text = Text(tournament.name, style=option_style)
+            table.add_row(option_text)
+            if error_to_display != "" and index == current_selection:
+                table.add_row(Text(str(error_to_display), style="bold red"))
 
-    def ask_start_round(self):
-        print("\nRound :")
-        print("--------------------------")
-        print(f"1. Démarrer le round {self.current_round}")
-        print("2. Retour à la sélection")
-        return self.ask_for_user_choice(2)
+        if len(self.tournaments) == current_selection:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
 
-    def ask_continue_round(self):
-        print("\nRound :")
-        print("--------------------------")
-        print(f"1. Continuer le round {self.current_round}")
-        print("2. Retour à la sélection")
-        return self.ask_for_user_choice(2)
+        option_text = Text(Helper.text_menu[Helper.get_main_menu()], style=option_style)
+        table.add_row(option_text)
 
-    def matches_selection(self):
-        print("\nMatchs :")
-        print("--------------------------")
-        for i in range(len(self.matches)):
-            print(f"{i + 1}. {self.matches[i]}")
-        print(f"{len(self.matches)}. Retour")
-        return self.ask_for_user_choice(len(self.matches) + 1, "Tapez le numéro correspondant au match :")
+        panel_title = f"[bold magenta]{self.name}[/bold magenta]"
+        table = Padding(table, (1, 0, 1, 0))
+        panel = Panel(Align.center(table), title=panel_title)
+        self.console.print(panel)
 
-    def ask_match_result(self):
-        print("\nRésultat :")
-        print("--------------------------")
-        print(f"1. {self.current_match.players_score[0][0]}")
-        print(f"2. {self.current_match.players_score[1][0]}")
-        print(f"3. Match nul")
-        return self.ask_for_user_choice(3, "Tapez le numéro correspondant au résultat du match :")
+    def render_start_round(self, current_selection):
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        if current_selection == 0:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
 
+        option_text = Text(f"Commencer le round", style=option_style)
+        table.add_row(Align.center(option_text))
+
+        if current_selection == 1:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+
+        option_text = Text("Retour", style=option_style)
+        table.add_row(Align.center(option_text))
+
+        panel_title = f"[bold magenta]Round {self.current_round_index}[/bold magenta]"
+        table = Padding(table, (1, 0, 1, 0))
+        panel = Panel(Align.center(table), title=panel_title)
+        self.console.print(panel)
+
+    def render_select_match(self, current_selection):
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        for index, match in enumerate(self.matches_not_played):
+            if not match.is_finished:
+                if index == current_selection:
+                    option_style = "bold white on blue"
+                else:
+                    option_style = "white"
+
+                option_text = Text(str(match), style=option_style)
+                table.add_row(option_text)
+
+        if current_selection == len(self.matches_not_played):
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+
+        option_text = Text("Retour", style=option_style)
+        table.add_row(option_text)
+
+        padded_table = Padding(self.get_table_match(), (1, 0, 0, 0))
+
+        table = Padding(table, (0, 1, 0, 1))
+        panel_menu_options = Panel(table, title="Menu options",
+                                   border_style="blue", padding=(1, 0),
+                                   expand=False)
+        padded_menu_options = Padding(panel_menu_options, 1)
+
+        panel_title = f"[bold magenta]{"Matchs"}[/bold magenta]"
+        layout = Group(Align.center(padded_table),
+                       Align.center(padded_menu_options))
+        panel = Panel(layout, title=panel_title)
+        self.console.print(panel)
+
+    def get_table_match(self):
+        table_result = Table(show_lines=True)
+        table_result.add_column("Joueur 1", justify="center")
+        table_result.add_column("Joueur 2", justify="center")
+        table_result.add_column("Résultat", justify="center")
+
+        for index, match in enumerate(self.matches):
+            table_result.add_row(str(match.get_player_one()), str(match.get_player_two()),
+                                 match.winner)
+        return table_result
+
+    def render_all_matches_played(self, current_selection):
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+
+        if current_selection == 0:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+
+        option_text = Align.center(Text("Round suivant", style=option_style))
+        table.add_row(option_text)
+
+        if current_selection == 1:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+
+        option_text = Text("Retour", style=option_style)
+        table.add_row(option_text)
+
+        panel_menu_options = Panel(table, title="Menu options",
+                                   border_style="blue", padding=(1, 1),
+                                   expand=False)
+        padded_menu_options = Padding(panel_menu_options, 1)
+
+        panel_title = f"[bold magenta]{"Matchs"}[/bold magenta]"
+        padded_table = Padding(self.get_table_match(), (1, 0, 0, 0))
+        layout = Group(Align.center(padded_table),
+                       Align.center(padded_menu_options))
+        panel = Panel(layout, title=panel_title)
+        self.console.print(panel)
+
+    def render_match_result(self, current_selection):
+        options = [self.current_match.players_score[0][0], self.current_match.players_score[1][0],
+                   "Match nul", "Retour"]
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        for index, option in enumerate(options):
+            if index == current_selection:
+                option_style = "bold white on blue"
+            else:
+                option_style = "white"
+            option_text = Text(str(option), style=option_style)
+            table.add_row(option_text)
+
+
+        panel_title = f"[bold magenta]{"Résultat"}[/bold magenta]"
+        table = Padding(table, (1, 0, 1, 0))
+        panel = Panel(Align.center(table), title=panel_title)
+        self.console.print(panel)
+
+    def render_end_tournament(self, current_selection):
+        table_result = Table(show_lines=True)
+        table_result.add_column("Joueur", justify="center")
+        table_result.add_column("Résultat", justify="center")
+
+        for player,score in self.tournament_finals_scores.items():
+            table_result.add_row(str(player), str(score))
+
+        if current_selection == 0:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+
+        table = Table.grid(padding=1)
+        table.add_column(justify="center")
+        option_text = Text("OK", style=option_style)
+        table.add_row(option_text)
+
+        padded_table = Padding(table_result, (1, 0, 0, 0))
+
+        panel_menu_options = Panel(Align.center(table), title="Menu options",
+                                   border_style="blue", padding=(1, 0),
+                                   expand=False)
+        padded_menu_options = Padding(panel_menu_options, 1)
+
+        panel_title = f"[bold magenta]{"Résultat"}[/bold magenta]"
+        layout = Group(Align.center(padded_table),
+                       Align.center(padded_menu_options))
+        panel = Panel(layout, title=panel_title)
+        self.console.print(panel)

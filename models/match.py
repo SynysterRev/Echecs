@@ -1,10 +1,13 @@
 from enum import Enum
 
+from models.player import Player
+
 
 class MatchResult(Enum):
     PLAYER_ONE = 1
     PLAYER_TWO = 2
     DRAW = 3
+
 
 class Match:
     def __init__(self, player_one, player_two):
@@ -15,24 +18,51 @@ class Match:
             player_two(list): a list containing the second Player and his score
         """
         self.players_score = (player_one, player_two)
-        self.winner = None
+        self.winner = ""
         self.is_finished = False
 
     def set_winner(self, result: MatchResult):
         if result == MatchResult.PLAYER_ONE:
-            self.winner = self.players_score[0]
+            self.winner = f"{self.players_score[0][0].first_name} {self.players_score[0][0].name}"
+            self.players_score = ([self.players_score[0][0], 1], [self.players_score[1][0], 0])
         elif result == MatchResult.PLAYER_TWO:
-            self.winner = self.players_score[1]
+            self.winner = f"{self.players_score[1][0].first_name} {self.players_score[1][0].name}"
+            self.players_score = ([self.players_score[0][0], 0], [self.players_score[1][0], 1])
         else:
-            self.winner = None
+            self.winner = "Match nul"
+            self.players_score = ([self.players_score[0][0], 0.5], [self.players_score[1][0], 0.5])
         self.is_finished = True
 
-    def update_player_one_score(self, value_to_add):
-        self.players_score[0][1] += value_to_add
+    def get_player_one(self):
+        return self.players_score[0][0]
 
-    def update_player_two_score(self, value_to_add):
-        self.players_score[1][1] += value_to_add
+    def get_player_two(self):
+        return self.players_score[1][0]
+
+    def get_player_one_and_score(self):
+        return self.players_score[0]
+
+    def get_player_two_and_score(self):
+        return self.players_score[1]
 
     def __str__(self):
         return f"{self.players_score[0][0]} contre {self.players_score[1][0]}"
 
+    @staticmethod
+    def deserialize(json_text) -> "Match":
+        player_one = Player.deserialize(json_text["player_one"][0])
+        player_one_point = json_text["player_one"][1]
+        player_two = Player.deserialize(json_text["player_two"][0])
+        player_two_point = json_text["player_two"][1]
+        winner = json_text["winner"]
+        is_finished = json_text["is_finished"]
+        match = Match([player_one, player_one_point], [player_two, player_two_point])
+        match.winner = winner
+        match.is_finished = is_finished
+        return match
+
+    def serialize(self):
+        return {"player_one": (self.players_score[0][0].serialize(), self.players_score[0][1]),
+                "player_two":(self.players_score[1][0].serialize(), self.players_score[1][1]),
+                "winner": self.winner,
+                "is_finished": self.is_finished}
