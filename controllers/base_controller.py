@@ -71,7 +71,6 @@ class BaseController:
         except ValueError:
             raise ValueError("La date doit être au format JJ/MM/AAAA")
 
-    # handle arrow character
     def get_user_input(self, view_func, validate_func, default_input=""):
         term = Terminal()
         user_input = default_input
