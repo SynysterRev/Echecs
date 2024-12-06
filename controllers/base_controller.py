@@ -1,7 +1,6 @@
 import datetime
 
 from blessed import Terminal
-from pynput import keyboard
 
 from custom_exception import EmptyStringException
 
@@ -22,19 +21,31 @@ class BaseController:
         self.view.clear_view()
         self.view.render(self.current_selection)
         self.max_selection = len(self.accessible_menus)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
+        self.handle_input()
         return self.accessible_menus[self.current_selection]
 
-    def handle_input(self, key):
+    def handle_input(self):
         """Handle user input
            return False if the user select a menu -> we don't need to wait for the user input anymore"""
-        if key == keyboard.Key.up:
-            self.move_up()
-        if key == keyboard.Key.down:
-            self.move_down()
-        if key == keyboard.Key.enter:
-            return False
+
+        term = Terminal()
+        with term.cbreak():
+            while True:
+                key = term.inkey(timeout=0.1)
+                if key:
+                    if key.name == "KEY_ENTER":
+                        return False
+                    elif key.name == "KEY_UP":
+                        self.move_up()
+                    elif key.name == "KEY_DOWN":
+                        self.move_down()
+
+        # if key == keyboard.Key.up:
+        #     self.move_up()
+        # if key == keyboard.Key.down:
+        #     self.move_down()
+        # if key == keyboard.Key.enter:
+        #     return False
 
     def move_up(self):
         self.current_selection = (self.current_selection - 1) % self.max_selection

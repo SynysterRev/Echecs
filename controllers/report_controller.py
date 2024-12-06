@@ -1,5 +1,3 @@
-from pynput import keyboard
-
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
@@ -31,8 +29,7 @@ class ReportController(BaseController):
         while True:
             self.view.clear_view()
             self.view_to_display[self.index_menu](self.current_selection)
-            with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-                listener.join()
+            self.handle_input()
 
             if self.accessible_menus[self.current_selection] == Helper.get_main_menu():
                 return Helper.get_main_menu()
@@ -55,8 +52,7 @@ class ReportController(BaseController):
         self.current_selection = 0
         self.view.clear_view()
         self.view.render_tournaments_names(self.current_selection)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
+        self.handle_input()
         self.selected_tournament = self.tournaments_list[self.current_selection]
         self.view.selected_tournament = self.selected_tournament
         return index_menu

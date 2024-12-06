@@ -1,6 +1,3 @@
-import sys
-
-from pynput import keyboard
 import re
 
 from controllers.base_controller import BaseController
@@ -35,8 +32,7 @@ class TournamentController(BaseController):
         while True:
             self.view.clear_view()
             self.view.render(self.current_selection)
-            with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-                listener.join()
+            self.handle_input()
 
             if self.accessible_menus[self.current_selection] == Helper.get_main_menu():
                 return Helper.get_main_menu()
@@ -108,8 +104,7 @@ class TournamentController(BaseController):
             self.view.clear_view()
             # display array with all selected players
             self.view.render_players_to_add(self.current_selection)
-            with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-                listener.join()
+            self.handle_input()
             if self.current_selection == 0:
                 if not players_imported:
                     self.wanted_players += self.players_list
@@ -153,8 +148,7 @@ class TournamentController(BaseController):
         self.view.accessible_menus = [Helper.get_validate(), Helper.get_back()]
         self.view.clear_view()
         self.view.render_validate_player(searched_player_name, self.current_selection)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
+        self.handle_input()
         if self.current_selection == 0:
             self.view.current_input = ""
             return self.searched_player

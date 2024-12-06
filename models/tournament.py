@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from models.match import Match
 from models.player import Player
 from models.round import Round
 

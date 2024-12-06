@@ -1,7 +1,5 @@
 import re
 
-from pynput import keyboard
-
 from controllers.base_controller import BaseController
 from custom_exception import EmptyStringException, IDException
 from helpers.deserializer import Deserializer
@@ -25,8 +23,7 @@ class PlayerController(BaseController):
         while True:
             self.view.clear_view()
             self.view.render(self.current_selection)
-            with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-                listener.join()
+            self.handle_input()
 
             if self.accessible_menus[self.current_selection] == Helper.get_main_menu():
                 return Helper.get_main_menu()

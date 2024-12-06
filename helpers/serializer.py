@@ -2,7 +2,6 @@ import json
 import os
 
 from helpers.helper import Helper
-from models.player import Player
 
 
 class Serializer:

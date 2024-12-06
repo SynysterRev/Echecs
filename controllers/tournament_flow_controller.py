@@ -1,8 +1,6 @@
 import random
 import copy
 
-from pynput import keyboard
-
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
@@ -122,8 +120,7 @@ class TournamentFlowController(BaseController):
         self.max_selection = len(self.tournaments) + 1
         self.view.render_tournament_selection(self.current_selection)
         while self.current_tournament is None:
-            with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-                listener.join()
+            self.handle_input()
             if self.current_selection != self.max_selection - 1:
                 # get selected tournament and current round and go to the next menu
                 if len(self.tournaments[self.current_selection].players) % 2 == 0:
@@ -149,8 +146,7 @@ class TournamentFlowController(BaseController):
             round_started = self.current_round.is_started()
         self.view.current_round_index = current_round_index
         self.view.render_start_round(self.current_selection)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
+        self.handle_input()
         if self.current_selection == 1:
             self.current_menu = 1
             self.current_tournament = None
@@ -169,8 +165,7 @@ class TournamentFlowController(BaseController):
             self.view.render_all_matches_played(self.current_selection)
         else:
             self.view.render_select_match(self.current_selection)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
+        self.handle_input()
         if self.current_selection == self.max_selection - 1:
             self.current_menu = 2
         else:
@@ -191,8 +186,7 @@ class TournamentFlowController(BaseController):
         self.max_selection = 4
         self.view.current_match = self.current_match
         self.view.render_match_result(self.current_selection)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
+        self.handle_input()
 
         match self.current_selection:
             case 0:
@@ -225,8 +219,7 @@ class TournamentFlowController(BaseController):
                                                      reverse=True))
         self.view.tournament_finals_scores = self.current_tournament.points
         self.view.render_end_tournament(self.current_selection)
-        with keyboard.Listener(on_press=self.handle_input, suppress=True) as listener:
-            listener.join()
+        self.handle_input()
         self.current_tournament.end_tournament()
         self.save()
         self.current_menu = 0
