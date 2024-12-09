@@ -18,4 +18,4 @@ class Player:
                 self.birth_date}
 
     def __str__(self):
-        return f"{self.first_name} {self.name} (ID : {self.player_id})"
+        return f"{self.first_name} {self.name} ({self.player_id})"

@@ -28,7 +28,7 @@ class Tournament:
         self.is_finished = False
         self.players_points = {}
         for player in self.players:
-            self.players_points[player] = 0
+            self.players_points[player.player_id] = 0
 
     def end_tournament(self):
         now = datetime.now()
@@ -36,16 +36,20 @@ class Tournament:
         self.is_finished = True
 
     def get_score(self, player):
-        if player in self.players_points:
-            return self.players_points[player]
+        if player.player_id in self.players_points:
+            return self.players_points[player.player_id]
 
-    def increase_score(self, player, points):
-        for current_player in self.players_points:
-            if current_player.player_id == player.player_id:
-                self.players_points[current_player] += points
+    def change_score(self, player, points):
+        if player.player_id in self.players_points:
+            self.players_points[player.player_id] = points
 
     def are_all_rounds_over(self) -> bool:
-        return self.current_round_index > self.number_rounds
+        return self.current_round_index >= self.number_rounds
+
+    def get_player_by_id(self, player_id):
+        for player in self.players:
+            if player.player_id == player_id:
+                return player
 
     def serialize(self):
         players_list = []
@@ -71,7 +75,7 @@ class Tournament:
         points = {}
         for registered_player in data["players"]:
             player = Player.deserialize(registered_player)
-            points[player] = registered_player["points"]
+            points[player.player_id] = registered_player["points"]
             players.append(player)
         description = data["description"]
         number_rounds = data["number_rounds"]
@@ -83,11 +87,11 @@ class Tournament:
         rounds = rounds
         is_finished = data["is_finished"]
 
-        tournament = Tournament(name, place, date_start, players, description, number_rounds)
+        tournament = Tournament(name, place, date_start, players, description, int(number_rounds))
         tournament.players = players
         tournament.current_round_index = current_round_index
         tournament.rounds = rounds
         tournament.is_finished = is_finished
-        tournament.points = points
+        tournament.players_points = points
         tournament.date_end = date_end
         return tournament

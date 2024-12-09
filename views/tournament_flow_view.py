@@ -20,6 +20,7 @@ class TournamentFlowView(BasicView):
         self.matches_not_played = []
         self.current_match = None
         self.tournament_finals_scores = {}
+        self.current_tournament = None
 
     def render_tournament_selection(self, current_selection, error_to_display=""):
         table = Table.grid(padding=1)
@@ -67,7 +68,7 @@ class TournamentFlowView(BasicView):
         option_text = Text("Retour", style=option_style)
         table.add_row(Align.center(option_text))
 
-        panel_title = f"[bold magenta]Round {self.current_round_index}[/bold magenta]"
+        panel_title = f"[bold magenta]Round {self.current_round_index + 1}[/bold magenta]"
         table = Padding(table, (1, 0, 1, 0))
         panel = Panel(Align.center(table), title=panel_title)
         self.console.print(panel)
@@ -110,11 +111,16 @@ class TournamentFlowView(BasicView):
     def get_table_match(self):
         table_result = Table(show_lines=True)
         table_result.add_column("Joueur 1", justify="center")
+        table_result.add_column("Points", justify="center")
         table_result.add_column("Joueur 2", justify="center")
+        table_result.add_column("Points", justify="center")
         table_result.add_column("Résultat", justify="center")
 
         for index, match in enumerate(self.matches):
-            table_result.add_row(str(match.get_player_one()), str(match.get_player_two()),
+            table_result.add_row(str(match.get_player_one()),
+                                 str(match.get_player_one_score()),
+                                 str(match.get_player_two()),
+                                 str(match.get_player_two_score()),
                                  match.winner)
         return table_result
 
@@ -174,7 +180,8 @@ class TournamentFlowView(BasicView):
         table_result.add_column("Résultat", justify="center")
 
         for player, score in self.tournament_finals_scores.items():
-            table_result.add_row(str(player), str(score))
+            table_result.add_row(str(self.current_tournament.get_player_by_id(player)),
+                                 str(score))
 
         if current_selection == 0:
             option_style = "bold white on blue"

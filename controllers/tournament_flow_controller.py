@@ -51,7 +51,7 @@ class TournamentFlowController(BaseController):
         return None
 
     def create_matches(self):
-        players_points = self.current_tournament.points
+        players_points = self.current_tournament.players_points
         players_list = sorted(players_points, key=players_points.get, reverse=True)
         players_left = copy.deepcopy(players_list)
         new_matches = []
@@ -61,8 +61,11 @@ class TournamentFlowController(BaseController):
             new_match = None
             for player in players_left:
                 if (len(self.players_encounters) == 0 or
-                        player.player_id not in self.players_encounters[current_player.player_id]):
-                    new_match = Match([current_player, 0], [player, 0])
+                        player not in self.players_encounters[current_player]):
+                    player_one = self.current_tournament.get_player_by_id(current_player)
+                    player_two = self.current_tournament.get_player_by_id(player)
+                    new_match = Match([player_one, players_points[current_player]],
+                                      [player_two, players_points[player]])
                     new_matches.append(new_match)
                     players_left.remove(player)
                     break
@@ -126,6 +129,7 @@ class TournamentFlowController(BaseController):
                 if len(self.tournaments[self.current_selection].players) % 2 == 0:
                     self.current_tournament = self.tournaments[self.current_selection]
                     self.get_encounters_for_players()
+                    self.view.current_tournament = self.current_tournament
                     self.view.current_round_index = self.current_tournament.current_round_index
                     self.current_menu = 2
                 else:
@@ -201,12 +205,13 @@ class TournamentFlowController(BaseController):
                 pass
         score_p1 = self.current_match.get_player_one_and_score()
         score_p2 = self.current_match.get_player_two_and_score()
-        self.current_tournament.increase_score(score_p1[0], score_p1[1])
-        self.current_tournament.increase_score(score_p2[0], score_p2[1])
+        self.current_tournament.change_score(score_p1[0], score_p1[1])
+        self.current_tournament.change_score(score_p2[0], score_p2[1])
         self.current_menu = 3
         self.save()
 
     def prepare_next_round(self):
+        self.current_round.end_round()
         self.current_tournament.current_round_index += 1
         if self.current_tournament.are_all_rounds_over():
             self.current_menu = 5
@@ -216,9 +221,9 @@ class TournamentFlowController(BaseController):
     def tournament_over(self):
         # Ok
         self.max_selection = 1
-        self.current_tournament.points = dict(sorted(self.current_tournament.points.items(), key=lambda item: item[1],
-                                                     reverse=True))
-        self.view.tournament_finals_scores = self.current_tournament.points
+        tournament_points = dict(sorted(self.current_tournament.players_points.items(),
+                                                     key=lambda item: item[1], reverse=True))
+        self.view.tournament_finals_scores = tournament_points
         self.view.render_end_tournament(self.current_selection)
         self.handle_input()
         self.current_tournament.end_tournament()

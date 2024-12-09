@@ -24,13 +24,20 @@ class Match:
     def set_winner(self, result: MatchResult):
         if result == MatchResult.PLAYER_ONE:
             self.winner = f"{self.players_score[0][0].first_name} {self.players_score[0][0].name}"
-            self.players_score = ([self.players_score[0][0], 1], [self.players_score[1][0], 0])
+            new_points_one = self.players_score[0][1] + 1
+            self.players_score = ([self.players_score[0][0], new_points_one],
+                                  [self.players_score[1][0], self.players_score[1][1]])
         elif result == MatchResult.PLAYER_TWO:
             self.winner = f"{self.players_score[1][0].first_name} {self.players_score[1][0].name}"
-            self.players_score = ([self.players_score[0][0], 0], [self.players_score[1][0], 1])
+            new_points_two = self.players_score[1][1] + 1
+            self.players_score = ([self.players_score[0][0], self.players_score[0][1]],
+                                  [self.players_score[1][0], new_points_two])
         else:
             self.winner = "Match nul"
-            self.players_score = ([self.players_score[0][0], 0.5], [self.players_score[1][0], 0.5])
+            new_points_one = self.players_score[0][1] + 0.5
+            new_points_two = self.players_score[1][1] + 0.5
+            self.players_score = ([self.players_score[0][0],new_points_one],
+                                  [self.players_score[1][0], new_points_two])
         self.is_finished = True
 
     def get_player_one(self):
@@ -38,6 +45,12 @@ class Match:
 
     def get_player_two(self):
         return self.players_score[1][0]
+
+    def get_player_one_score(self):
+        return self.players_score[0][1]
+
+    def get_player_two_score(self):
+        return self.players_score[1][1]
 
     def get_player_one_and_score(self):
         return self.players_score[0]
