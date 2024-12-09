@@ -94,7 +94,6 @@ class TournamentController(BaseController):
                                       Helper.get_add_player(), Helper.get_validate()]
         self.current_menu = 1
         self.render_new_player = True
-        players_imported = False
         self.current_selection = 0
         self.view.players_list = self.wanted_players
         self.max_selection = len(self.view.accessible_menus)
@@ -106,9 +105,9 @@ class TournamentController(BaseController):
             possible_error = ""
             self.handle_input()
             if self.current_selection == 0:
-                if not players_imported:
-                    self.wanted_players += self.players_list
-                    players_imported = True
+                for player in self.players_list:
+                    if player not in self.wanted_players:
+                        self.wanted_players.append(player)
             elif self.current_selection == 1:
                 self.wanted_players.append(self.selection_players())
                 self.current_menu = 1
