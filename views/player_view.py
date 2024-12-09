@@ -55,7 +55,7 @@ class PlayerView(BasicView):
         else:
             return Text(player_information)
 
-    def validate_information(self, final_input, field_index):
+    def validate_player_information(self, final_input, field_index):
         if field_index < len(self.new_player_informations):
             self.new_player_informations[field_index] += final_input
 

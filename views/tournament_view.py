@@ -101,9 +101,6 @@ class TournamentView(BasicView):
         if field_index < len(self.new_player_informations):
             self.new_player_informations[field_index] += final_input
 
-    def change_information_player_input_index(self, new_field_index):
-        self.index_field = new_field_index
-
     def clear_player_informations(self):
         self.index_field = 0
         self.current_input = ""

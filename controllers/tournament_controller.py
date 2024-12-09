@@ -116,7 +116,7 @@ class TournamentController(BaseController):
                                               Helper.get_add_player(), Helper.get_validate()]
                 self.max_selection = len(self.view.accessible_menus)
             elif self.current_selection == 2:
-                new_player = self.add_new_player()
+                new_player = self.ask_for_new_player()
                 Serializer.serialize_player(new_player)
                 self.wanted_players.append(new_player)
             elif self.current_selection == 3:
@@ -162,45 +162,6 @@ class TournamentController(BaseController):
             return self.searched_player
         else:
             return self.selection_players()
-
-    def add_new_player(self):
-        index_field = 0
-        self.view.index_field = 0
-        self.view.clear_view()
-        self.view.render_new_player()
-        method_per_index = {0: (self.is_player_id_valid, IDException),
-                            1: (self.is_input_not_empty, EmptyStringException),
-                            2: (self.is_input_not_empty, EmptyStringException),
-                            3: (self.validate_date, ValueError)}
-        new_player_informations = []
-        while True:
-            last_input = ""
-            while True:
-                try:
-                    final_input = self.get_user_input(self.handle_information_player_input,
-                                                      method_per_index[index_field][0], last_input)
-                except method_per_index[index_field][1] as exception:
-                    last_input = self.view.current_input
-                    self.view.clear_view()
-                    self.view.render_new_player(exception)
-                else:
-                    break
-            self.view.current_input = ""
-            new_player_informations.append(final_input)
-            index_field += 1
-            if index_field == 4:
-                break
-            self.view.change_information_player_input_index(index_field)
-            self.view.validate_player_information(final_input, index_field - 1)
-            self.handle_information_player_input()
-        new_player = Player(new_player_informations[0],
-                            new_player_informations[1],
-                            new_player_informations[2],
-                            new_player_informations[3])
-        index_field = 0
-        new_player_informations = []
-        self.view.clear_player_informations()
-        return new_player
 
     def handle_information_player_input(self):
         self.view.clear_view()
