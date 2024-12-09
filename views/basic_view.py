@@ -1,9 +1,10 @@
-from helpers.helper import Helper
-from rich.text import Text
-from rich.table import Table
 from rich.align import Align
-from rich.panel import Panel
 from rich.padding import Padding
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
+
+from helpers.helper import Helper
 
 
 class BasicView:

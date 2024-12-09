@@ -36,7 +36,7 @@ class Match:
             self.winner = "Match nul"
             new_points_one = self.players_score[0][1] + 0.5
             new_points_two = self.players_score[1][1] + 0.5
-            self.players_score = ([self.players_score[0][0],new_points_one],
+            self.players_score = ([self.players_score[0][0], new_points_one],
                                   [self.players_score[1][0], new_points_two])
         self.is_finished = True
 

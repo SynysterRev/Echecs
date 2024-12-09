@@ -1,11 +1,7 @@
-import re
-
 from controllers.base_controller import BaseController
-from custom_exception import EmptyStringException, IDException
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
 from helpers.serializer import Serializer
-from models.player import Player
 
 
 class PlayerController(BaseController):

@@ -139,7 +139,7 @@ class ReportView(BasicView):
         table_result.add_column("Résultat", justify="center")
 
         sorted_points = dict(sorted(self.selected_tournament.players_points.items(), key=lambda item: item[1],
-                    reverse=True))
+                                    reverse=True))
         for player, score in sorted_points.items():
             table_result.add_row(str(player), str(score))
         padded_table_result = Padding(table_result, (1, 0, 0, 0))

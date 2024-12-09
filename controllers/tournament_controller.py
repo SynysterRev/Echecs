@@ -5,7 +5,6 @@ from custom_exception import EmptyStringException, IDException
 from helpers.deserializer import Deserializer
 from helpers.helper import Helper
 from helpers.serializer import Serializer
-from models.player import Player
 from models.tournament import Tournament
 
 

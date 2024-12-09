@@ -222,7 +222,7 @@ class TournamentFlowController(BaseController):
         # Ok
         self.max_selection = 1
         tournament_points = dict(sorted(self.current_tournament.players_points.items(),
-                                                     key=lambda item: item[1], reverse=True))
+                                        key=lambda item: item[1], reverse=True))
         self.view.tournament_finals_scores = tournament_points
         self.view.render_end_tournament(self.current_selection)
         self.handle_input()
