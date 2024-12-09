@@ -13,7 +13,6 @@ class TournamentController(BaseController):
     def __init__(self, view):
         super().__init__(view)
         self.accessible_menus = (Helper.get_new_tournament_menu(),
-                                 # Helper.get_modify_tournament_menu(),
                                  Helper.get_main_menu())
         self.tournaments_list = []
         self.players_list = []
@@ -115,7 +114,9 @@ class TournamentController(BaseController):
                                               Helper.get_add_player(), Helper.get_validate()]
                 self.max_selection = len(self.view.accessible_menus)
             elif self.current_selection == 2:
-                self.wanted_players.append(self.add_new_player())
+                new_player = self.add_new_player()
+                Serializer.serialize_player(new_player)
+                self.wanted_players.append(new_player)
             elif self.current_selection == 3:
                 number_players = len(self.wanted_players)
                 if number_players % 2 != 0:
