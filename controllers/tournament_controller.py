@@ -54,6 +54,8 @@ class TournamentController(BaseController):
         new_tournament_informations = []
         while True:
             default_input_value = "4" if index_field == 4 else ""
+            self.view.current_input = default_input_value
+            self.handle_information_tournament_input()
             while True:
                 try:
                     final_input = self.get_user_input(self.handle_information_tournament_input,

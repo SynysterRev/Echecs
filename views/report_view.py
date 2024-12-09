@@ -56,13 +56,13 @@ class ReportView(BasicView):
 
     def render_all_tournaments(self, current_selection):
         table = Table(show_lines=True)
-        table.add_column("Nom", justify="center")
-        table.add_column("Lieu", justify="center")
-        table.add_column("Date début", justify="center")
-        table.add_column("Date fin", justify="center")
-        table.add_column("ID Joueurs", justify="center")
-        table.add_column("Description", justify="center")
-        table.add_column("Nombre de rounds", justify="center")
+        table.add_column("Nom", justify="center", vertical="middle")
+        table.add_column("Lieu", justify="center", vertical="middle")
+        table.add_column("Date début", justify="center", vertical="middle")
+        table.add_column("Date fin", justify="center", vertical="middle")
+        table.add_column("ID Joueurs", justify="center", vertical="middle")
+        table.add_column("Description", justify="center", vertical="middle")
+        table.add_column("Nombre de rounds", justify="center", vertical="middle")
 
         for tournament in self.tournaments:
             id_list = ""
