@@ -10,8 +10,8 @@ from models.round import Round
 
 
 class TournamentFlowController(BaseController):
-
     def __init__(self, view):
+        """Controller to handle tournaments flow, creating rounds, generate matches"""
         super().__init__(view)
         self.players_encounters = {}
         self.players = []
@@ -28,7 +28,7 @@ class TournamentFlowController(BaseController):
         self.current_match = None
 
     def check_previous_matches(self, current_player, all_matches, players_left):
-        """check if we can pair current player with a player already paired
+        """Check if we can pair current player with a player already paired
         check by reversed to keep score between players close"""
 
         for match in reversed(all_matches):
@@ -51,6 +51,7 @@ class TournamentFlowController(BaseController):
         return None
 
     def create_matches(self):
+        """Create matches for the current round, trying to avoid rematch"""
         players_points = self.current_tournament.players_points
         players_list = sorted(players_points, key=players_points.get, reverse=True)
         players_left = copy.deepcopy(players_list)
@@ -80,7 +81,9 @@ class TournamentFlowController(BaseController):
         return new_matches
 
     def start_round(self):
-        random.shuffle(self.players)
+        # Shuffle players only for the first round
+        if self.current_tournament.current_round_index == 0:
+            random.shuffle(self.players)
         matches = self.create_matches()
         self.matches = matches
         current_round = Round(f"Round {self.current_tournament.current_round_index + 1}", matches)
@@ -93,6 +96,7 @@ class TournamentFlowController(BaseController):
         self.tournaments = [tournament for tournament in Deserializer.deserialize_tournament() if
                             not tournament.is_finished]
         self.view.tournaments = self.tournaments
+        # Left menu 0 empty because it's the "go back" menu
         available_menus = {0: None, 1: self.select_tournament, 2: self.select_round,
                            3: self.select_match, 4: self.select_match_result,
                            5: self.tournament_over}
@@ -100,7 +104,7 @@ class TournamentFlowController(BaseController):
             self.current_selection = 0
             self.view.clear_view()
             function = available_menus[self.current_menu]
-            if self.current_menu == 0:
+            if function is None:
                 return Helper.get_main_menu()
             function()
 
@@ -109,6 +113,7 @@ class TournamentFlowController(BaseController):
             Serializer.serialize_tournament(self.current_tournament)
 
     def get_encounters_for_players(self):
+        """Get all players and their encounters for the current tournament"""
         self.players = self.current_tournament.players
         for player in self.players:
             self.players_encounters[player.player_id] = []
@@ -141,7 +146,7 @@ class TournamentFlowController(BaseController):
                 return
 
     def select_round(self):
-        # current round and back menu
+        # Current round and back menu
         self.max_selection = 2
         current_round_index = self.current_tournament.current_round_index
         round_started = False
@@ -152,6 +157,7 @@ class TournamentFlowController(BaseController):
         self.view.current_round_index = current_round_index
         self.view.render_start_round(self.current_selection)
         self.handle_input()
+        # Back to previous menu
         if self.current_selection == 1:
             self.current_menu = 1
             self.current_tournament = None
@@ -171,6 +177,7 @@ class TournamentFlowController(BaseController):
         else:
             self.view.render_select_match(self.current_selection)
         self.handle_input()
+        # Back to previous menu
         if self.current_selection == self.max_selection - 1:
             self.current_menu = 2
         else:

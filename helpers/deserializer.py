@@ -10,6 +10,7 @@ from models.tournament import Tournament
 class Deserializer:
     @staticmethod
     def deserialize_players() -> List[Player]:
+        """Deserialize all the registered players and return them in a list"""
         players_list = []
         file_path = Helper.get_player_path()
         if os.path.exists(file_path):
@@ -25,6 +26,7 @@ class Deserializer:
 
     @staticmethod
     def deserialize_tournament() -> List[Tournament]:
+        """Deserialize all the registered tournaments and return them in a list"""
         tournament_list = []
         file_path = Helper.get_tournament_path()
         if os.path.exists(file_path):

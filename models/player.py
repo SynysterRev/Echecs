@@ -7,6 +7,7 @@ class Player:
 
     @staticmethod
     def deserialize(json_text) -> "Player":
+        """Deserialize a player from a json"""
         player_id = json_text["player_id"]
         name = json_text["name"]
         first_name = json_text["first_name"]
@@ -14,6 +15,7 @@ class Player:
         return Player(player_id, name, first_name, birth_date)
 
     def serialize(self):
+        """Serialize a player to a json"""
         return {"player_id": self.player_id, "name": self.name, "first_name": self.first_name, "birth_date":
                 self.birth_date}
 

@@ -6,6 +6,7 @@ from helpers.serializer import Serializer
 
 class PlayerController(BaseController):
     def __init__(self, view):
+        """Controller to create new player and add them to the database"""
         super().__init__(view)
         self.accessible_menus = (Helper.get_add_player(),
                                  Helper.get_main_menu())

@@ -5,6 +5,7 @@ from helpers.helper import Helper
 
 class ReportController(BaseController):
     def __init__(self, view):
+        """Controller to generate reports"""
         super().__init__(view)
         self.players_list = []
         self.tournaments_list = []
@@ -44,7 +45,8 @@ class ReportController(BaseController):
 
     def render_view(self):
         self.view.clear_view()
-        self.view_to_display[self.index_menu](self.current_selection)
+        if self.index_menu in self.view_to_display:
+            self.view_to_display[self.index_menu](self.current_selection)
 
     def select_tournament(self):
         self.index_menu = 4
@@ -53,6 +55,7 @@ class ReportController(BaseController):
         self.view.clear_view()
         self.view.render_tournaments_names(self.current_selection)
         self.handle_input()
+        # Back to basic report menu
         if self.current_selection == self.max_selection - 1:
             return -1
         self.selected_tournament = self.tournaments_list[self.current_selection]

@@ -7,6 +7,7 @@ from helpers.helper import Helper
 class Serializer:
     @staticmethod
     def serialize_player(player):
+        """Serialize a player and save it in a json file"""
         file_data = []
         file_path = Helper.get_player_path()
         if os.path.exists(file_path):
@@ -21,6 +22,7 @@ class Serializer:
 
     @staticmethod
     def serialize_tournament(tournament):
+        """Serialize a tournament and save it in a json file"""
         file_path = Helper.get_tournament_path() + tournament.name + ".json"
         try:
             os.makedirs(Helper.get_tournament_path(), exist_ok=True)

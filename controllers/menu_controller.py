@@ -4,6 +4,7 @@ from helpers.helper import Helper
 
 class MenuController(BaseController):
     def __init__(self, view):
+        """Main menu controller"""
         super().__init__(view)
         self.accessible_menus = (Helper.get_start_tournament_menu(),
                                  Helper.get_tournament_menu(),

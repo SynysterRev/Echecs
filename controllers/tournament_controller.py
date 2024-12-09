@@ -10,6 +10,7 @@ from models.tournament import Tournament
 
 class TournamentController(BaseController):
     def __init__(self, view):
+        """ Controller to create new tournament and add them to the database"""
         super().__init__(view)
         self.accessible_menus = (Helper.get_new_tournament_menu(),
                                  Helper.get_main_menu())

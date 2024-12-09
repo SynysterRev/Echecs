@@ -30,7 +30,7 @@ class BaseController:
 
     def handle_input(self):
         """Handle user input
-           return False if the user select a menu -> we don't need to wait for the user input anymore"""
+        return False if the user select a menu -> we don't need to wait for the user input anymore"""
 
         term = Terminal()
         with term.cbreak():
@@ -80,6 +80,13 @@ class BaseController:
             raise ValueError("La date doit être au format JJ/MM/AAAA")
 
     def get_user_input(self, view_func, validate_func, default_input=""):
+        """Get user input, display it and validate it
+
+        Parameters:
+            view_func(func): view method to call every time user generate input
+            validate_func(func): validate if the input is valid or not
+            default_input(string): input to display and validate if the user doesn't write anything
+        """
         term = Terminal()
         user_input = default_input
         with term.cbreak():
@@ -93,7 +100,7 @@ class BaseController:
                         user_input = user_input[:-1]
                         self.view.current_input = user_input
                         view_func()
-                    # avoid special key like arrow or F1 to be counted
+                    # Avoid special key like arrow or F1 to be counted.
                     elif key.name is None:
                         user_input += key
                         self.view.current_input = user_input
@@ -104,6 +111,7 @@ class BaseController:
         self.view.index_field = 0
         self.view.clear_view()
         self.view.render_new_player()
+        # Function to validate the user input and the linked error to display.
         method_per_index = {0: (self.is_player_id_valid, IDException),
                             1: (self.is_input_not_empty, EmptyStringException),
                             2: (self.is_input_not_empty, EmptyStringException),
@@ -113,7 +121,7 @@ class BaseController:
             last_input = ""
             while True:
                 try:
-                    final_input = self.get_user_input(self.handle_information_player_input,
+                    final_input = self.get_user_input(self.render_information_player_input,
                                                       method_per_index[index_field][0], last_input)
                 except method_per_index[index_field][1] as exception:
                     last_input = self.view.current_input
@@ -124,11 +132,11 @@ class BaseController:
             self.view.current_input = ""
             new_player_informations.append(final_input)
             index_field += 1
-            if index_field == 4:
+            if index_field == len(method_per_index):
                 break
             self.view.change_information_input_index(index_field)
             self.view.validate_player_information(final_input, index_field - 1)
-            self.handle_information_player_input()
+            self.render_information_player_input()
         new_player = Player(new_player_informations[0],
                             new_player_informations[1],
                             new_player_informations[2],
@@ -143,6 +151,7 @@ class BaseController:
             raise IDException("Cet identifiant existe déjà dans la base de données")
         return True
 
-    def handle_information_player_input(self):
+    def render_information_player_input(self):
+        """Display the user input for the new player"""
         self.view.clear_view()
         self.view.render_new_player()

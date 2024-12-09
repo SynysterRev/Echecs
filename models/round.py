@@ -40,6 +40,7 @@ class Round:
 
     @staticmethod
     def deserialize(json_text) -> "Round":
+        """Deserialize a round from a json"""
         name = json_text["name"]
         is_finished = json_text["is_finished"]
         date_begin = json_text["date_begin"]
@@ -54,6 +55,7 @@ class Round:
         return rnd
 
     def serialize(self):
+        """Serialize a round to a json"""
         matches_list = []
         for match in self.matches:
             matches_list.append(match.serialize())

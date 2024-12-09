@@ -52,6 +52,7 @@ class Tournament:
                 return player
 
     def serialize(self):
+        """Serialize a tournament to a json"""
         players_list = []
         for player in self.players:
             serialized_player = player.serialize()
@@ -67,6 +68,7 @@ class Tournament:
 
     @staticmethod
     def deserialize(data) -> "Tournament":
+        """Deserialize a tournament from a json"""
         name = data["name"]
         place = data["place"]
         date_start = data["date_start"]

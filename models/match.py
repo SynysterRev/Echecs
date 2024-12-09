@@ -63,6 +63,7 @@ class Match:
 
     @staticmethod
     def deserialize(json_text) -> "Match":
+        """Deserialize a match from a json"""
         player_one = Player.deserialize(json_text["player_one"][0])
         player_one_point = json_text["player_one"][1]
         player_two = Player.deserialize(json_text["player_two"][0])
@@ -75,6 +76,7 @@ class Match:
         return match
 
     def serialize(self):
+        """Serialize a match to a json"""
         return {"player_one": (self.players_score[0][0].serialize(), self.players_score[0][1]),
                 "player_two": (self.players_score[1][0].serialize(), self.players_score[1][1]),
                 "winner": self.winner,
