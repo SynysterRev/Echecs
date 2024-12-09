@@ -14,3 +14,6 @@ Une fois celui-ci activé, installez les paquets Python nécessaires en utilisan
 
 # Lancer le projet
 Tapez la commande ```python main.py``` pour exécuter le script.
+
+# Générer le rapport flake8
+Tapez la commande ```flake8 --format=html --htmldir=flake-report```
