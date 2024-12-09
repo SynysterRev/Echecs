@@ -23,24 +23,7 @@ class TournamentView(BasicView):
         self.players_list = []
 
     def render(self, current_selection):
-        table = Table(show_lines=True)
-        table.add_column("Nom", justify="center", vertical="middle")
-        table.add_column("Lieu", justify="center", vertical="middle")
-        table.add_column("Date début", justify="center", vertical="middle")
-        table.add_column("Date fin", justify="center", vertical="middle")
-        table.add_column("ID Joueurs", justify="center", vertical="middle")
-        table.add_column("Description", justify="center", max_width=100, vertical="middle")
-        table.add_column("Nombre de rounds", justify="center", vertical="middle")
-
-        for tournament in self.tournaments:
-            id_list = ""
-            for index, player in enumerate(tournament.players):
-                if index != 0 and index % 4 == 0:
-                    id_list += "\n"
-                id_list += f"{player.player_id}, " if index < len(tournament.players) - 1 else f"{player.player_id}"
-            row = [tournament.name, tournament.place, tournament.date_start, tournament.date_end,
-                   id_list, tournament.description, str(tournament.number_rounds)]
-            table.add_row(*row)
+        table = self.get_tournament_table(self.tournaments)
 
         padded_table = Padding(table, (1, 0, 0, 0))
 
@@ -88,15 +71,7 @@ class TournamentView(BasicView):
                                            "Description : ", "Nombre de rounds : "]
 
     def render_players_to_add(self, current_selection, error_to_display=""):
-        table = Table(show_lines=True)
-        table.add_column("ID", justify="center")
-        table.add_column("Prénom", justify="center")
-        table.add_column("Nom", justify="center")
-        table.add_column("Date de naissance", justify="center")
-
-        for player in self.players_list:
-            row = [player.player_id, player.first_name, player.name, player.birth_date]
-            table.add_row(*row)
+        table = self.get_players_table(self.players_list)
 
         padded_table = Padding(table, (1, 0, 0, 0))
 

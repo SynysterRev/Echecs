@@ -21,15 +21,7 @@ class PlayerView(BasicView):
         self.current_input = ""
 
     def render(self, current_selection):
-        table = Table(show_lines=True)
-        table.add_column("ID", justify="center")
-        table.add_column("Prénom", justify="center")
-        table.add_column("Nom", justify="center")
-        table.add_column("Date de naissance", justify="center")
-
-        for player in self.players_list:
-            row = [player.player_id, player.first_name, player.name, player.birth_date]
-            table.add_row(*row)
+        table = self.get_players_table(self.players_list)
 
         padded_table = Padding(table, (1, 0, 0, 0))
 

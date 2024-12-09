@@ -55,24 +55,7 @@ class ReportView(BasicView):
         self.console.print(panel)
 
     def render_all_tournaments(self, current_selection):
-        table = Table(show_lines=True)
-        table.add_column("Nom", justify="center", vertical="middle")
-        table.add_column("Lieu", justify="center", vertical="middle")
-        table.add_column("Date début", justify="center", vertical="middle")
-        table.add_column("Date fin", justify="center", vertical="middle")
-        table.add_column("ID Joueurs", justify="center", vertical="middle")
-        table.add_column("Description", justify="center", vertical="middle")
-        table.add_column("Nombre de rounds", justify="center", vertical="middle")
-
-        for tournament in self.tournaments:
-            id_list = ""
-            for index, player in enumerate(tournament.players):
-                if index != 0 and index % 4 == 0:
-                    id_list += "\n"
-                id_list += f"{player.player_id}, " if index < len(tournament.players) - 1 else f"{player.player_id}"
-            row = [tournament.name, tournament.place, tournament.date_start, tournament.date_end,
-                   id_list, tournament.description, str(tournament.number_rounds)]
-            table.add_row(*row)
+        table = self.get_tournament_table(self.tournaments)
 
         padded_table = Padding(table, (1, 0, 0, 0))
 
