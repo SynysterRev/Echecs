@@ -35,7 +35,7 @@ class ReportController(BaseController):
                 return Helper.get_main_menu()
 
             if self.current_selection == 2 or self.current_selection == 3:
-                self.max_selection = len(self.tournaments_list)
+                self.max_selection = len(self.tournaments_list) + 1
                 self.index_menu = self.select_tournament()
             else:
                 self.index_menu = self.current_selection
@@ -53,6 +53,8 @@ class ReportController(BaseController):
         self.view.clear_view()
         self.view.render_tournaments_names(self.current_selection)
         self.handle_input()
+        if self.current_selection == self.max_selection - 1:
+            return -1
         self.selected_tournament = self.tournaments_list[self.current_selection]
         self.view.selected_tournament = self.selected_tournament
         return index_menu

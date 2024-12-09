@@ -5,6 +5,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from helpers.helper import Helper
 from views.basic_view import BasicView
 
 
@@ -93,6 +94,12 @@ class ReportView(BasicView):
                 option_style = "white"
             option_text = Text(tournament.name, style=option_style)
             table.add_row(option_text)
+
+        if len(self.tournaments) == current_selection:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+        table.add_row(Text(Helper.text_menu[Helper.get_back()], style=option_style))
         panel_title = "[bold magenta]Sélection tournoi[/bold magenta]"
         table = Padding(table, (1, 0, 1, 0))
         self.console.print(Panel(Align.center(table), title=panel_title))
