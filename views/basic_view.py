@@ -47,6 +47,7 @@ class BasicView:
         return padded_menu_options
 
     def get_tournament_table(self, tournaments_list):
+        """Return a table with all tournaments"""
         table = Table(show_lines=True)
         table.add_column("Nom", justify="center", vertical="middle")
         table.add_column("Lieu", justify="center", vertical="middle")
@@ -68,6 +69,7 @@ class BasicView:
         return table
 
     def get_players_table(self, players_list):
+        """Return a table with all players"""
         table = Table(show_lines=True)
         table.add_column("ID", justify="center")
         table.add_column("Prénom", justify="center")

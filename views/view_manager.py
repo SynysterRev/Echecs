@@ -19,6 +19,7 @@ class ViewManager:
                       Helper.get_generate_reports_menu(): ReportView}
 
     def get_view(self, view_name):
+        """Return the view corresponding to the given name"""
         if view_name == Helper.get_quit():
             return None
         try:
