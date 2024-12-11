@@ -46,6 +46,7 @@ class PlayerView(BasicView):
         self.console.print(panel)
 
     def get_input_display(self, player_information, current_input, is_current_field):
+        """Display > < around the current information's field"""
         if is_current_field:
             player_information += current_input
             text = Text("> ", style="blue")
@@ -56,10 +57,13 @@ class PlayerView(BasicView):
             return Text(player_information)
 
     def validate_player_information(self, final_input, field_index):
+        """Add the input entered by the user after the information's field
+        so we keep track of the information about the new player"""
         if field_index < len(self.new_player_informations):
             self.new_player_informations[field_index] += final_input
 
     def change_information_input_index(self, new_field_index):
+        """Change the current information's field"""
         self.index_field = new_field_index
 
     def clear_player_informations(self):

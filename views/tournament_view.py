@@ -5,6 +5,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from helpers.helper import Helper
 from views.basic_view import BasicView
 
 
@@ -47,21 +48,37 @@ class TournamentView(BasicView):
         panel = Panel(Align.center(table), title=panel_title)
         self.console.print(panel)
 
-    def get_input_display(self, tournament_information, current_input, is_current_field):
+    def get_input_display(self, information, current_input, is_current_field):
+        """Display > < around the current information's field"""
         if is_current_field:
-            tournament_information += current_input
+            information += current_input
             text = Text("> ", style="blue")
-            text.append(tournament_information)
+            text.append(information)
             text.append("<", style="blue")
             return text
         else:
-            return Text(tournament_information)
+            return Text(information)
+
+    def get_input_display_search_player(self, information, current_input, is_current_field):
+        """Display > < around the current information's field and keep information updated even if the user
+        move to another menu option"""
+        information += current_input
+        if is_current_field:
+            text = Text("> ", style="blue")
+            text.append(information)
+            text.append("<", style="blue")
+            return text
+        else:
+            return Text(information)
 
     def validate_information(self, final_input, field_index):
+        """Add the input entered by the user after the information's field
+        so we keep track of the information about the new tournament"""
         if field_index < len(self.new_tournament_information):
             self.new_tournament_information[field_index] += final_input
 
     def change_information_input_index(self, new_field_index):
+        """Change the current information's field"""
         self.index_field = new_field_index
 
     def clear_tournament_informations(self):
@@ -98,6 +115,8 @@ class TournamentView(BasicView):
         self.console.print(panel)
 
     def validate_player_information(self, final_input, field_index):
+        """Add the input entered by the user after the information's field
+        so we keep track of the information about the new player"""
         if field_index < len(self.new_player_informations):
             self.new_player_informations[field_index] += final_input
 
@@ -107,13 +126,21 @@ class TournamentView(BasicView):
         self.new_player_informations = ["ID joueur : ", "Nom : ",
                                         "Prénom : ", "Date de naissance (ex : 01/01/2000) : "]
 
-    def render_selection_player(self, error_to_display=""):
+    def render_selection_player(self, current_selection, error_to_display=""):
         search = Table.grid(padding=1)
         search.add_column(justify="center")
-        search.add_row(self.get_input_display("ID du joueur (entrée pour valider): ",
-                                              self.current_input, True))
+
+        search.add_row(self.get_input_display_search_player("ID du joueur (entrée pour valider): ",
+                                              self.current_input, current_selection == 0))
         if error_to_display != "":
             search.add_row(Text(str(error_to_display), style="bold red"))
+
+        if current_selection == 1:
+            option_style = "bold white on blue"
+        else:
+            option_style = "white"
+
+        search.add_row(Text(Helper.text_menu[Helper.get_back()], style=option_style))
 
         panel_title = "[bold magenta]Sélection de joueur[/bold magenta]"
         search = Padding(search, (1, 0, 1, 0))

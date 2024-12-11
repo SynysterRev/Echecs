@@ -1,5 +1,7 @@
 import re
 
+from blessed import Terminal
+
 from controllers.base_controller import BaseController
 from custom_exception import EmptyStringException, IDException
 from helpers.deserializer import Deserializer
@@ -134,24 +136,30 @@ class TournamentController(BaseController):
         self.view.accessible_menus = self.accessible_menus
 
     def selection_players(self):
+        self.current_selection = 0
         self.view.clear_view()
-        self.view.render_selection_player()
+        self.view.render_selection_player(self.current_selection)
         default_input_value = self.view.current_input
         player_id = ""
+        self.max_selection = 2
+        self.current_menu = 2
         while True:
             try:
-                player_id = self.get_user_input(self.handle_player_selection_input,
+                player_id = self.get_special_user_input(self.handle_player_selection_input,
                                                 self.does_player_id_exist, default_input_value)
+                if player_id == Helper.get_back():
+                    self.view.current_input = ""
+                    self.ask_for_players()
             except IDException as exception:
                 default_input_value = self.view.current_input
                 self.view.clear_view()
-                self.view.render_selection_player(exception)
+                self.view.render_selection_player(self.current_selection, exception)
             else:
                 break
         self.searched_player = next(player for player in self.players_list if player.player_id == player_id)
         searched_player_name = f"{self.searched_player.first_name} {self.searched_player.name}"
         self.current_selection = 0
-        self.current_menu = 2
+        self.current_menu = 3
         self.max_selection = 2
         self.view.accessible_menus = [Helper.get_validate(), Helper.get_back()]
         self.view.clear_view()
@@ -169,14 +177,7 @@ class TournamentController(BaseController):
 
     def handle_player_selection_input(self):
         self.view.clear_view()
-        self.view.render_selection_player()
-
-    def is_player_id_valid(self, new_player_id):
-        if not re.match(r"^[A-Z]{2}[1-9]{5}$", new_player_id):
-            raise IDException("L'identifiant doit comporter 2 lettres suivies de 5 chiffres (AB12345)")
-        if any(new_player_id == player.player_id for player in self.players_list):
-            raise IDException("Cet identifiant existe déjà dans la base de données")
-        return True
+        self.view.render_selection_player(self.current_selection)
 
     def does_player_id_exist(self, player_id):
         if not re.match(r"^[A-Z]{2}[0-9]{5}$", player_id):
@@ -194,5 +195,43 @@ class TournamentController(BaseController):
         elif self.current_menu == 1:
             self.view.render_players_to_add(self.current_selection)
         elif self.current_menu == 2:
+            self.view.render_selection_player(self.current_selection)
+        elif self.current_menu == 3:
             searched_player_name = f"{self.searched_player.first_name} {self.searched_player.name}"
             self.view.render_validate_player(searched_player_name, self.current_selection)
+
+    def get_special_user_input(self, view_func, validate_func, default_input=""):
+        """Get user input, display it and validate it. Use when the user wants to search for a specific player.
+        It allows him to go back to the previous menu if needed.
+
+        Parameters:
+            view_func(func): view method to call every time user generate input
+            validate_func(func): validate if the input is valid or not
+            default_input(string): input to display and validate if the user doesn't write anything
+        """
+        term = Terminal()
+        user_input = default_input
+        with term.cbreak():
+            while True:
+                key = term.inkey(timeout=0.1)
+                if key:
+                    if key.name == "KEY_ENTER":
+                        if self.current_selection == 0:
+                            if validate_func(user_input):
+                                return user_input
+                        else:
+                            return Helper.get_back()
+                    elif key.name == "KEY_BACKSPACE":
+                        user_input = user_input[:-1]
+                        self.view.current_input = user_input
+                        view_func()
+                    # Allow user to select the "back" menu
+                    elif key.name == "KEY_UP":
+                        self.move_up()
+                    elif key.name == "KEY_DOWN":
+                        self.move_down()
+                    # Avoid special key like arrow or F1 to be counted.
+                    elif key.name is None:
+                        user_input += key
+                        self.view.current_input = user_input
+                        view_func()
