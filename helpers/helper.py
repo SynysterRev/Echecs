@@ -14,7 +14,7 @@ class Helper:
     @classmethod
     def get_player_path(cls):
         """Get the path where the json players is stored"""
-        return "data/players/players.json"
+        return "data/players/"
 
     @classmethod
     def get_tournament_path(cls):

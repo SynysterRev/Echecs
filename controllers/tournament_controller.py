@@ -19,7 +19,6 @@ class TournamentController(BaseController):
         self.tournaments_list = []
         self.players_list = []
         self.wanted_players = []
-        self.render_new_player = False
         self.current_menu = 0
         self.searched_player = None
 
@@ -86,6 +85,7 @@ class TournamentController(BaseController):
         Serializer.serialize_tournament(new_tournament)
         self.tournaments_list.append(new_tournament)
         self.view.clear_tournament_informations()
+        self.wanted_players = []
         index_field = 0
         default_input_value = ""
         new_tournament_informations = []
@@ -93,13 +93,8 @@ class TournamentController(BaseController):
         self.current_menu = 0
 
     def ask_for_players(self):
-        self.view.accessible_menus = [Helper.get_import_players_menu(), Helper.get_select_players_menu(),
-                                      Helper.get_add_player(), Helper.get_validate()]
-        self.current_menu = 1
-        self.render_new_player = True
-        self.current_selection = 0
+        self.init_ask_player_menu()
         self.view.players_list = self.wanted_players
-        self.max_selection = len(self.view.accessible_menus)
         possible_error = ""
         while True:
             self.view.clear_view()
@@ -112,11 +107,10 @@ class TournamentController(BaseController):
                     if player not in self.wanted_players:
                         self.wanted_players.append(player)
             elif self.current_selection == 1:
-                self.wanted_players.append(self.selection_players())
-                self.current_menu = 1
-                self.view.accessible_menus = [Helper.get_import_players_menu(), Helper.get_select_players_menu(),
-                                              Helper.get_add_player(), Helper.get_validate()]
-                self.max_selection = len(self.view.accessible_menus)
+                new_player = self.selection_players()
+                if new_player is not None:
+                    self.wanted_players.append(new_player)
+                self.init_ask_player_menu()
             elif self.current_selection == 2:
                 new_player = self.ask_for_new_player()
                 Serializer.serialize_player(new_player)
@@ -136,40 +130,50 @@ class TournamentController(BaseController):
         self.view.accessible_menus = self.accessible_menus
 
     def selection_players(self):
-        self.current_selection = 0
-        self.view.clear_view()
-        self.view.render_selection_player(self.current_selection)
+        self.init_player_selection()
         default_input_value = self.view.current_input
         player_id = ""
-        self.max_selection = 2
-        self.current_menu = 2
         while True:
             try:
                 player_id = self.get_special_user_input(self.handle_player_selection_input,
                                                         self.does_player_id_exist, default_input_value)
                 if player_id == Helper.get_back():
                     self.view.current_input = ""
-                    self.ask_for_players()
+                    return None
             except IDException as exception:
                 default_input_value = self.view.current_input
                 self.view.clear_view()
                 self.view.render_selection_player(self.current_selection, exception)
             else:
-                break
-        self.searched_player = next(player for player in self.players_list if player.player_id == player_id)
-        searched_player_name = f"{self.searched_player.first_name} {self.searched_player.name}"
-        self.current_selection = 0
-        self.current_menu = 3
+                self.searched_player = next(player for player in self.players_list if player.player_id == player_id)
+                searched_player_name = f"{self.searched_player.first_name} {self.searched_player.name}"
+                self.current_selection = 0
+                self.current_menu = 3
+                self.max_selection = 2
+                self.view.accessible_menus = [Helper.get_validate(), Helper.get_back()]
+                self.view.clear_view()
+                self.view.render_validate_player(searched_player_name, self.current_selection)
+                self.handle_input()
+                if self.current_selection == 0:
+                    self.view.current_input = ""
+                    return self.searched_player
+                else:
+                    default_input_value = player_id
+                    self.init_player_selection()
+
+    def init_player_selection(self):
         self.max_selection = 2
-        self.view.accessible_menus = [Helper.get_validate(), Helper.get_back()]
+        self.current_menu = 2
+        self.current_selection = 0
         self.view.clear_view()
-        self.view.render_validate_player(searched_player_name, self.current_selection)
-        self.handle_input()
-        if self.current_selection == 0:
-            self.view.current_input = ""
-            return self.searched_player
-        else:
-            return self.selection_players()
+        self.view.render_selection_player(self.current_selection)
+
+    def init_ask_player_menu(self):
+        self.view.accessible_menus = [Helper.get_import_players_menu(), Helper.get_select_players_menu(),
+                                      Helper.get_add_player(), Helper.get_validate()]
+        self.current_menu = 1
+        self.current_selection = 0
+        self.max_selection = len(self.view.accessible_menus)
 
     def handle_information_player_input(self):
         self.view.clear_view()

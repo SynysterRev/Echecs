@@ -12,9 +12,9 @@ class Deserializer:
     def deserialize_players() -> List[Player]:
         """Deserialize all the registered players and return them in a list"""
         players_list = []
-        file_path = Helper.get_player_path()
+        file_path = Helper.get_player_path() + "players.json"
         if os.path.exists(file_path):
-            with open(Helper.get_player_path(), "r") as file:
+            with open(file_path, "r") as file:
                 try:
                     json_data = json.load(file)
                     for player in json_data:

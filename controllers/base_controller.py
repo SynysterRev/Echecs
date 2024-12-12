@@ -145,7 +145,7 @@ class BaseController:
         return new_player
 
     def is_player_id_valid(self, new_player_id):
-        if not re.match(r"^[A-Z]{2}[1-9]{5}$", new_player_id):
+        if not re.match(r"^[A-Z]{2}[0-9]{5}$", new_player_id):
             raise IDException("L'identifiant doit comporter 2 lettres suivies de 5 chiffres (AB12345)")
         if any(new_player_id == player.player_id for player in self.players_list):
             raise IDException("Cet identifiant existe déjà dans la base de données")

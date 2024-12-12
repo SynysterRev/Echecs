@@ -10,6 +10,15 @@ class Serializer:
         """Serialize a player and save it in a json file"""
         file_data = []
         file_path = Helper.get_player_path()
+        try:
+            os.makedirs(file_path, exist_ok=True)
+        except PermissionError:
+            print("Permission denied: unable to create json player.")
+            return
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return
+        file_path += "players.json"
         if os.path.exists(file_path):
             with open(file_path, "r") as file:
                 try:
