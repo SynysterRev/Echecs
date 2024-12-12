@@ -146,7 +146,7 @@ class TournamentController(BaseController):
         while True:
             try:
                 player_id = self.get_special_user_input(self.handle_player_selection_input,
-                                                self.does_player_id_exist, default_input_value)
+                                                        self.does_player_id_exist, default_input_value)
                 if player_id == Helper.get_back():
                     self.view.current_input = ""
                     self.ask_for_players()

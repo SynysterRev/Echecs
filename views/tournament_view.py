@@ -131,7 +131,7 @@ class TournamentView(BasicView):
         search.add_column(justify="center")
 
         search.add_row(self.get_input_display_search_player("ID du joueur (entrée pour valider): ",
-                                              self.current_input, current_selection == 0))
+                                                            self.current_input, current_selection == 0))
         if error_to_display != "":
             search.add_row(Text(str(error_to_display), style="bold red"))
 
