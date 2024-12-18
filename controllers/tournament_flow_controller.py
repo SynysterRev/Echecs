@@ -1,5 +1,6 @@
 import copy
 import random
+from datetime import datetime
 
 from controllers.base_controller import BaseController
 from helpers.deserializer import Deserializer
@@ -84,6 +85,8 @@ class TournamentFlowController(BaseController):
         # Shuffle players only for the first round
         if self.current_tournament.current_round_index == 0:
             random.shuffle(self.players)
+            now = datetime.now()
+            self.current_tournament.date_start = now.strftime("%d/%m/%Y %H:%M:%S")
         matches = self.create_matches()
         self.matches = matches
         current_round = Round(f"Round {self.current_tournament.current_round_index + 1}", matches)
