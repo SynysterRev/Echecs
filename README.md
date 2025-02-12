@@ -1,6 +1,8 @@
 # Echecs
 
 Python version : Python 3.12.8
+
+Ceci est une petite application écrite en Python qui permet de gérer des tournois d'échecs directement dans la console.
  
 # Installation du projet
 ## Invite de commande
